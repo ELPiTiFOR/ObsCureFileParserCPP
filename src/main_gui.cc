@@ -5,15 +5,16 @@
 #include "raygui.h"
 
 #include "it/it_file.hh"
+#include "sav/sav_file.hh"
 #include "gui/canvas.hh"
 #include "gui/diff_mode.hh"
 #include "gui/file_search_bar.hh"
 #include "gui/it_scroll_list.hh"
+#include "gui/sav_view.hh"
 #include "gui/text_box.hh"
+#include "gui/windows/it_window.hh"
+#include "gui/windows/sav_window.hh"
 #include "oci/item.hh"
-
-#define IT_WINDOW_WIDTH 660
-#define IT_WINDOW_HEIGHT 700
 
 int main(int argc, char *argv[])
 {
@@ -21,7 +22,9 @@ int main(int argc, char *argv[])
     oci::initializeAllItemUids();
     oci::initializeAllExtraInfos();
 
-    InitWindow(IT_WINDOW_WIDTH, IT_WINDOW_HEIGHT, "ObsCureFileParser");
+    float main_window_width = IT_WINDOW_WIDTH * 2;
+    float main_window_height = IT_WINDOW_HEIGHT;
+    InitWindow(main_window_width, main_window_height, "ObsCureFileParser");
     SetTargetFPS(60);
 
     std::string file_path_str("");
@@ -35,26 +38,26 @@ int main(int argc, char *argv[])
         }
     }
 
-    gui::FileSearchBar<ItFile> it_search_bar(0, 0, file_path_str);
-    gui::ItScrollList it_scroll_list(0, 0);
+    // IT WIN
+    gui::ItWindow it_window(file_path_str);
+    gui::SavWindow sav_window(file_path_str);
 
-    Rectangle rect = {0, 0, IT_WINDOW_WIDTH, IT_WINDOW_HEIGHT};
-    gui::Canvas window_canvas(&rect, false, nullptr);
+    gui::Canvas main_window(main_window_width, main_window_height, false,
+        nullptr);
+    gui::Line* line = main_window.addLine(main_window_height);
+    gui::Canvas* it_win_canvas = line->addCanvas(IT_WINDOW_WIDTH);
+    it_win_canvas->setComponent(&it_window);
 
-    gui::Line* search_bar_line = window_canvas.addLine(45);
-    gui::Canvas* search_bar_canvas = search_bar_line->addCanvas(IT_WINDOW_WIDTH);
-    search_bar_canvas->setComponent(&it_search_bar);
-
-    gui::Line* it_scroll_line = window_canvas.addLine(IT_WINDOW_HEIGHT - 45);
-    gui::Canvas* it_scroll_canvas = it_scroll_line->addCanvas(IT_WINDOW_WIDTH);
-    it_scroll_canvas->setComponent(&it_scroll_list);
+    gui::Canvas* sav_win_canvas = line->addCanvas(SAV_WINDOW_WIDTH);
+    sav_win_canvas->setComponent(&sav_window);
 
     while (!WindowShouldClose())
     {
         BeginDrawing();
         ClearBackground(GetColor(GuiGetStyle(DEFAULT, BACKGROUND_COLOR)));
-        it_scroll_list.setItFileAndUpdate(it_search_bar.getFile());
-        window_canvas.display();
+
+        // IT WIN
+        main_window.display();
         EndDrawing();
     }
 

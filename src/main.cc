@@ -39,6 +39,17 @@ int main(int argc, char* argv[])
 
         commands::parseItFile(std::string(argv[2]));
     }
+    else if (std::string(argv[1]) == "--sav-crc")
+    {
+        if (argc < 3)
+        {
+            std::cerr << "Please provide a path after \"--sav-crc\""
+                << std::endl;
+            return OCFP_MISSING_ARGUMENT;
+        }
+
+        commands::correctCrc32(std::string(argv[2]));
+    }
     else
     {
         std::cerr << "Unknown command \"" << std::string(argv[1]) << "\""

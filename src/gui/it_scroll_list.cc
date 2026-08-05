@@ -23,7 +23,7 @@ namespace gui
             IT_SCROLL_ELEMENT_MUL_WIDTH,
             IT_SCROLL_ELEMENT_MUL_HEIGHT
         )
-        , diff_mode_(DiffMode(it_item.getDiffMode()))
+        , diff_mode_(DiffMode(&it_item.getDiffMode()))
         , item_type_selector_(ItemTypeSelector(it_item.getItemType()))
         , extra_info_selector_(ExtraInfoSelector(it_item.getExtraInfo()))
         , remove_button_(Button(

@@ -67,6 +67,9 @@ target_link_libraries(OCFPTest PRIVATE
     ocfp_tests
     ocfp_logic
 )
+target_compile_options(OCFPTest PRIVATE
+    -g
+)
 
 target_compile_options(ObsCureFileParser PRIVATE
     -Wall

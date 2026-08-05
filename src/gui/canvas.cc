@@ -20,6 +20,14 @@ namespace gui
         , view_({0, 0})
     {}
 
+    Canvas::Canvas(float width, float height, bool is_scrollable, gui::Component* component)
+        : Component(0, 0, width, height)
+        , is_scrollable_(is_scrollable)
+        , component_(component)
+        , scroll_({0, 0})
+        , view_({0, 0})
+    {}
+
     bool Canvas::getIsScrollable()
     {
         return is_scrollable_;

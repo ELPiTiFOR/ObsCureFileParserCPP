@@ -23,12 +23,14 @@ namespace gui
     public:
         Canvas();
         Canvas(Rectangle* rect, bool is_scrollable, gui::Component* component);
+        Canvas(float width, float height, bool is_scrollable,
+            gui::Component* component);
         bool getIsScrollable();
         gui::Component* getComponent();
         std::vector<Line>& getLines();
         void setIsScrollable(bool is_scrollable);
         void setComponent(gui::Component* component);
-        void display();
+        virtual void display();
         Line* addLine(float height);
     private:
         bool is_scrollable_;

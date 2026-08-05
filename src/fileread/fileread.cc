@@ -17,6 +17,28 @@ std::uint32_t fileread::read4ByteLsb(std::ifstream& is)
     return item_type;
 }
 
+std::uint16_t fileread::read2ByteMsb(std::ifstream& is)
+{
+    std::uint16_t res = 0;
+    is.read(reinterpret_cast<char*>(&res), 2);
+    res = utils::lsbOf(res);
+    return res;
+}
+
+std::uint16_t fileread::read2ByteLsb(std::ifstream& is)
+{
+    std::uint16_t res = 0;
+    is.read(reinterpret_cast<char*>(&res), 2);
+    return res;
+}
+
+std::uint8_t fileread::read1Byte(std::ifstream& is)
+{
+    std::uint8_t res = 0;
+    is.read(reinterpret_cast<char*>(&res), 1);
+    return res;
+}
+
 bool fileread::areFilesEqual(std::filesystem::path path1,
     std::filesystem::path path2)
 {

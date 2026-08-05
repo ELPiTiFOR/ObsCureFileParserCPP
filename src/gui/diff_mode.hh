@@ -11,11 +11,13 @@ namespace gui
     class DiffMode : public Component
     {
     public:
-        DiffMode(oci::DiffMode& diff_mode);
+        DiffMode(oci::DiffMode* diff_mode);
         DiffMode(const DiffMode& other);
+        oci::DiffMode* getDiffMode();
+        void setDiffMode(oci::DiffMode* diff_mode);
         void display() override;
     private:
-        oci::DiffMode& diff_mode_;
+        oci::DiffMode* diff_mode_;
         gui::CheckBox special_box_;
         gui::CheckBox hard_box_;
         gui::CheckBox normal_box_;
