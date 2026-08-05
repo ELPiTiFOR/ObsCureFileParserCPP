@@ -39,3 +39,30 @@ Here's a list of the different keys there may be in the config file and their
 meaning:
 - `IT_DEFAULT_PATH`: the path to an IT file, the IT search bar will be
 auto-completed with this value when the program is started.
+
+## Dependencies
+This project uses Raylib and Raygui for the GUI. Both projects are a creation
+of [raysan5](https://github.com/raysan5), check out his work!
+
+In order to compile ObsCureFileParser you will need these libraries. Here's the
+contents that you need to have inside the `deps` folder:
+```
+deps/
+├── raygui/
+│   └── include/
+│       └── raygui.h
+└── raylib/
+    ├── bin/
+    │    └── raylib.dll
+    ├── include/
+    │    ├── raylib.h
+    │    ├── raymath.h
+    │    └── rlgl.h
+    └── lib/
+        ├── libraylib.a
+        └── libraylibdll.a
+```
+
+You can get the needed files on the GitHub page of each project:
+[raylib](https://github.com/raysan5/raylib),
+[raygui](https://github.com/raysan5/raygui).
