@@ -41,8 +41,8 @@ meaning:
 auto-completed with this value when the program is started.
 
 ## Dependencies
-This project uses Raylib and Raygui for the GUI. Both projects are a creation
-of [raysan5](https://github.com/raysan5), check out his work!
+This project uses Raylib v6.0 and Raygui v5.0 for the GUI. Both projects are a
+creation of [raysan5](https://github.com/raysan5), check out his work!
 
 In order to compile ObsCureFileParser you will need these libraries. Here's the
 contents that you need to have inside the `deps` folder:
