@@ -1,5 +1,7 @@
 build/
-deps/
+deps/*/*.dll
+deps/*/lib/
+deps/*/bin/
 CMakeFiles/
 *.bak
 OCFP.config
