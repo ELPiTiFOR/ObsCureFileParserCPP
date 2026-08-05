@@ -64,5 +64,8 @@ deps/
 ```
 
 You can get the needed files on the GitHub page of each project:
-[raylib](https://github.com/raysan5/raylib),
-[raygui](https://github.com/raysan5/raygui).
+[Raylib](https://github.com/raysan5/raylib),
+[Raygui](https://github.com/raysan5/raygui).
+
+The ZLib license notice can be found inside the header files of Raylib and
+Raygui, both projects use said license.
