@@ -15,7 +15,7 @@ namespace gui
     class TextBox : public Component
     {
     public:
-        TextBox() = default;
+        TextBox();
         TextBox(Rectangle* rect, const std::string& text);
         TextBox(float x, float y, float width, float height);
         TextBox(const TextBox& other);

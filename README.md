@@ -20,4 +20,22 @@ boxes, the dropdowns, etc, and finally you can save the changes by pressing the
 Save button.
 
 You can also drag and drop your IT file into the `ObsCureFileParserGUI.exe` so
-that the search bar is auto completed.
+that the search bar is auto completed, or use a configuration file.
+
+#### Config files
+Example of a config file used in ObsCureFileParser:
+
+```
+IT_DEFAULT_PATH=C:\SteamLibrary\steamapps\common\Obscure\data\_common\allitems.it
+```
+
+It is a sequence of key-value pairs, the key and the value are separated by one
+equal sign ('='), and there is one pair per line of the config file. The file
+must be named "OCFP.config" and it must be in the same directory as the
+executable file. Note that whitespaces (' ') are allowed in the key and in the
+value.
+
+Here's a list of the different keys there may be in the config file and their
+meaning:
+- `IT_DEFAULT_PATH`: the path to an IT file, the IT search bar will be
+auto-completed with this value when the program is started.

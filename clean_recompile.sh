@@ -5,4 +5,5 @@ mkdir build
 cd build
 cmake ..
 cmake --build .
+cp ../OCFP.config .
 exit 0

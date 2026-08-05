@@ -2,6 +2,13 @@
 
 namespace gui
 {
+    TextBox::TextBox()
+        : Component()
+        , is_focused_(false)
+    {
+        memset(text_, 0, TEXT_BOX_BUFFER_SIZE);
+    }
+
     TextBox::TextBox(Rectangle* rect, const std::string& text)
         : Component(rect)
         , is_focused_(false)
@@ -13,7 +20,9 @@ namespace gui
     TextBox::TextBox(float x, float y, float width, float height)
         : Component(x, y, width, height)
         , is_focused_(false)
-    {}
+    {
+        memset(text_, 0, TEXT_BOX_BUFFER_SIZE);
+    }
 
     TextBox::TextBox(const TextBox& other)
         : Component(other)
