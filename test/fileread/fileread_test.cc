@@ -5,6 +5,7 @@
 #include "test.hh"
 
 // Every test returns 0 if it passed and 1 if it failed
+// TODO: add tests for float LSB/MSB reading?
 
 namespace filereadtest
 {

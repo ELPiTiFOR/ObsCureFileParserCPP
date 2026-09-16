@@ -39,6 +39,50 @@ std::uint8_t fileread::read1Byte(std::ifstream& is)
     return res;
 }
 
+std::string fileread::readString(std::ifstream& is, int length)
+{
+    char buf[length + 1] = { 0 };
+    is.read(reinterpret_cast<char*>(&buf[0]), length);
+    std::string res(reinterpret_cast<char*>(&buf[0]));
+    return res;
+}
+
+std::string fileread::readLString(std::ifstream& is)
+{
+    std::uint32_t length = fileread::read4ByteMsb(is);
+    return fileread::readString(is, length);
+}
+
+float fileread::readFloatMsb(std::ifstream& is)
+{
+    float res = 0;
+    void* res_v = &res;
+    is.read(static_cast<char*>(res_v), 4);
+    res = utils::lsbOfFloat(res);
+    return res;
+}
+
+float fileread::readFloatLsb(std::ifstream& is)
+{
+    float res = 0;
+    void* res_v = &res;
+    is.read(reinterpret_cast<char*>(res_v), 4);
+    return res;
+}
+
+void fileread::skipBytes(std::ifstream& is, std::uint32_t count)
+{
+    for (std::uint32_t i = 0; i < count / 4; i++)
+    {
+        fileread::read4ByteMsb(is);
+    }
+
+    for (std::uint32_t i = 0; i < count % 4; i++)
+    {
+        fileread::read1Byte(is);
+    }
+}
+
 bool fileread::areFilesEqual(std::filesystem::path path1,
     std::filesystem::path path2)
 {

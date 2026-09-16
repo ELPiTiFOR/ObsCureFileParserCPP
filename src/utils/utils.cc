@@ -38,6 +38,23 @@ std::uint16_t utils::lsbOf(std::uint16_t n)
     return *buf_u;
 }
 
+float utils::lsbOfFloat(float n)
+{
+    char buf[4] = {0};
+    char* buf_c = buf;
+    void* buf_v = buf_c;
+    float* buf_f = reinterpret_cast<float*>(buf_v);
+    *buf_f = n;
+    char aux = buf[0];
+    buf[0] = buf[3];
+    buf[3] = aux;
+    aux = buf[2];
+    buf[2] = buf[1];
+    buf[1] = aux;
+
+    return *buf_f;
+}
+
 std::uint32_t utils::hexStringToUint(const std::string& str)
 {
     for (const char& c : str)

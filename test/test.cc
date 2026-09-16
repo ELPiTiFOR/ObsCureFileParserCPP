@@ -5,6 +5,7 @@
 #include "diff_mode/diff_mode_test.hh"
 #include "fileread/fileread_test.hh"
 #include "filewrite/filewrite_test.hh"
+#include "hoe/hoe_test.hh"
 #include "it/it_test.hh"
 #include "sav/sav_test.hh"
 
@@ -17,6 +18,7 @@ int main()
     filewritetest::test();
     savtest::test();
     configtest::test();
+    hoetest::test();
 
     return 0;
 }
