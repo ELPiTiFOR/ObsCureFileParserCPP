@@ -18,4 +18,8 @@ namespace commands
     {
         SavFile::correctCrc32(path);
     }
+
+    void test()
+    {
+    }
 }

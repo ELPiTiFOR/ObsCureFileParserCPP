@@ -8,6 +8,7 @@ class HoeEvent
 {
 public:
     std::string getHoeVariableName(size_t index);
+    HoeConstant* getHoeConstant(size_t index);
 };
 
 /*
@@ -221,13 +222,27 @@ HoeConstantVal::HoeConstantVal(std::uint32_t index)
 HoeConstantVal* HoeConstantVal::parseConstantVal(std::ifstream& file)
 {
     std::uint32_t index = fileread::read4ByteMsb(file);
-    HoeConstantVal* constant = new HoeConstantVal(index);
-    return constant;
+    HoeConstantVal* constant_val = new HoeConstantVal(index);
+    HoeConstant* constant = CurrentEvent::getCurrentEvent()->getHoeConstant(
+        index
+    );
+    constant_val->setConstant(constant);
+    return constant_val;
 }
 
 std::uint32_t HoeConstantVal::getIndex() const
 {
     return index_;
+}
+
+HoeConstant* HoeConstantVal::getConstant() const
+{
+    return constant_;
+}
+
+void HoeConstantVal::setConstant(HoeConstant* constant)
+{
+    constant_ = constant;
 }
 
 /*
@@ -1888,7 +1903,13 @@ std::ostream& operator<<(std::ostream& os, const HoeVariable& variable)
 
 std::ostream& operator<<(std::ostream& os, const HoeConstantVal& constant_val)
 {
-    os << "hoe_constants[" << constant_val.getIndex() << "]";
+    if (!constant_val.getConstant())
+    {
+        os << "hoe_constants[" << constant_val.getIndex() << "]";
+        return os;
+    }
+
+    os << *(constant_val.getConstant()) << "(hoe_constant)";
     return os;
 }
 

@@ -6,6 +6,7 @@
 #include <vector>
 
 class HoeEvent;
+class HoeConstant;
 
 class Indent
 {
@@ -169,8 +170,11 @@ public:
     HoeConstantVal(std::uint32_t index);
     static HoeConstantVal* parseConstantVal(std::ifstream& file);
     std::uint32_t getIndex() const;
+    HoeConstant* getConstant() const;
+    void setConstant(HoeConstant* constant);
 private:
     std::uint32_t index_;
+    HoeConstant* constant_;
 };
 
 class HoeUkValue03 : public HoeValue
@@ -555,3 +559,6 @@ std::ostream& operator<<(std::ostream& os, const HoeString& str);
 std::ostream& operator<<(std::ostream& os, const HoeArgument& argument);
 std::ostream& operator<<(std::ostream& os, const HoeImmediateArg& immediate_arg);
 std::ostream& operator<<(std::ostream& os, const HoeConstantArg& constant_arg);
+
+// this is in the hoe_file.hh
+std::ostream& operator<<(std::ostream& os, const HoeConstant& constant);

@@ -138,6 +138,18 @@ std::string HoeEvent::getHoeVariableName(size_t index)
     globals.push_back("gPlayerDetected");
     globals.push_back("isBlocked");
     globals.push_back("isMoving");
+    globals.push_back("gCurrentMord");
+    globals.push_back("gRunLighting");
+    globals.push_back("gIsRespawn");
+    globals.push_back("isTurning");
+    globals.push_back("gPlayerDetectedSpec");
+    globals.push_back("gKinState");
+    globals.push_back("gCanFight");
+    globals.push_back("gCamState");
+    globals.push_back("gCanJump");
+    globals.push_back("gIsAlive");
+    globals.push_back("gHelpRespawn");
+    globals.push_back("gCanBite");
 
     // We check all the globals in lstrings_ first
     int globals_in_lstrings = 0;
@@ -171,6 +183,16 @@ std::string HoeEvent::getHoeVariableName(size_t index)
     }
 
     return "";
+}
+
+HoeConstant* HoeEvent::getHoeConstant(size_t index)
+{
+    if (index >= hoe_constants_.size())
+    {
+        return nullptr;
+    }
+
+    return &(hoe_constants_.at(index));
 }
 
 float HoeEvent::getMagicNumber()

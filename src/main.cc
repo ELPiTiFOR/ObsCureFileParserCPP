@@ -50,6 +50,10 @@ int main(int argc, char* argv[])
 
         commands::correctCrc32(std::string(argv[2]));
     }
+    else if (std::string(argv[1]) == "test")
+    {
+        commands::test();
+    }
     else
     {
         std::cerr << "Unknown command \"" << std::string(argv[1]) << "\""

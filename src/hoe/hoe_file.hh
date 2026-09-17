@@ -60,6 +60,7 @@ public:
     void parseHoeConstant(std::ifstream& file);
     void parseHoeScript(std::ifstream& file);
     std::string getHoeVariableName(size_t index);
+    HoeConstant* getHoeConstant(size_t index);
     float getMagicNumber();
     std::string& getName();
     const std::string& getName() const;
