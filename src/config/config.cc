@@ -3,6 +3,9 @@
 #include <iostream>
 #include <sstream>
 
+Config::Config()
+{}
+
 Config::Config(const std::string& path)
     : Config(std::filesystem::path(path))
 {}
@@ -75,6 +78,10 @@ std::string Config::getValueOrDefault(const std::string& key,
 const std::unordered_map<std::string, std::string>& Config::getPairs() const
 {
     return pairs_;
+}
+void Config::setValue(const std::string& key, const std::string& value)
+{
+    pairs_[key] = value;
 }
 
 void Config::print() const

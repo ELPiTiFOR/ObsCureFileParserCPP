@@ -3,7 +3,9 @@
 #include <bit>
 #include <cstdint>
 
+#include "config/config.hh"
 #include "fileread/fileread_test.hh"
+#include "oci/room.hh"
 #include "test.hh"
 
 namespace hoetest
@@ -406,6 +408,61 @@ namespace hoetest
     {
         return testPrintRoom("e103");
     }
+
+    bool testParseAllRooms()
+    {
+        std::string filename = "OCFP.config";
+        Config config(filename);
+        std::string data_folder_str = config.getValue(
+            "DATA_FOLDER_DEFAULT_PATH"
+        );
+        std::filesystem::path data_folder_path(data_folder_str);
+
+        for (oci::Room& room : oci::all_rooms)
+        {
+            std::filesystem::path file_path = oci::getRoomFilePath(
+                data_folder_path, room.id, oci::RoomFileType::HOE
+            );
+
+            HoeFile* hoe_file = HoeFile::makeFile(file_path);
+            if (!hoe_file) return 1;
+        }
+
+        return 0;
+    }
+
+    bool testPrintAllRooms()
+    {
+        std::string filename = "OCFP.config";
+        Config config(filename);
+        std::string data_folder_str = config.getValue(
+            "DATA_FOLDER_DEFAULT_PATH"
+        );
+        std::filesystem::path data_folder_path(data_folder_str);
+
+        for (oci::Room& room : oci::all_rooms)
+        {
+            std::filesystem::path file_path = oci::getRoomFilePath(
+                data_folder_path, room.id, oci::RoomFileType::HOE
+            );
+
+            std::filesystem::path output_path = std::filesystem::current_path();
+            output_path.append("test");
+            output_path.append("results");
+            output_path.append("all_rooms");
+            output_path.append(room.id + ".hoe.txt");
+
+            HoeFile* hoe_file = HoeFile::makeFile(file_path);
+            if (!hoe_file) return 1;
+
+            std::ofstream file(output_path, std::ios::binary);
+            file << *hoe_file;
+
+            file.close();
+        }
+
+        return 0;
+    }
 }
 
 bool hoetest::test()
@@ -421,6 +478,30 @@ bool hoetest::test()
     RUN_TEST(hoetest::testPrintB000)
     RUN_TEST(hoetest::testPrintA003)
     RUN_TEST(hoetest::testPrintE103)
+
+    try
+    {
+        std::string filename = "OCFP.config";
+        Config config(filename);
+        std::string config_data_folder = config.getValue(
+            "DATA_FOLDER_DEFAULT_PATH"
+        );
+
+        // TODO: or if the path is invalid
+        if (config_data_folder == "")
+        {
+            throw std::runtime_error(
+                "No config file found, aborting testParseAllRooms and testPrintAllRooms"
+            );
+        }
+
+        RUN_TEST(hoetest::testParseAllRooms)
+        RUN_TEST(hoetest::testPrintAllRooms)
+    } catch (std::exception& e)
+    {
+        std::cerr << "[HOETEST::TESTPARSEALLROOMS ABORTED]" << std::endl;
+        std::cerr << "[HOETEST::TESTPRINTALLROOMS ABORTED]" << std::endl;
+    }
     // TODO: test some cells in the collisions map
 
     return 0;

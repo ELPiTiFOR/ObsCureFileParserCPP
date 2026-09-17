@@ -7,10 +7,12 @@
 #include "filewrite/filewrite_test.hh"
 #include "hoe/hoe_test.hh"
 #include "it/it_test.hh"
+#include "oci/room.hh"
 #include "sav/sav_test.hh"
 
 int main()
 {
+    oci::initializeAllRooms();
     filereadtest::test();
     ittest::test();
     diffmodetest::test();

@@ -1482,7 +1482,10 @@ std::ostream& operator<<(std::ostream& os, const HoeScript& script)
         i++;
     }
 
-    Indent::printIndent(os);
+    if (i != 0)
+    {
+        Indent::printIndent(os);
+    }
     os << "while (true) {" << std::endl;
     Indent::increaseIndent();
     for (HoeIfThen* if_then : script.getIfThens())

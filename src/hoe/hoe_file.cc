@@ -1080,6 +1080,7 @@ int HoeFile::parseEvent(std::ifstream& file)
     return 0;
 }
 
+// TODO: return nullptr if the parsing of a chunk fails
 HoeFile* HoeFile::makeFile(std::filesystem::path path)
 {
     std::ifstream file(path, std::ios::binary);
@@ -1111,7 +1112,12 @@ HoeFile* HoeFile::makeFile(std::filesystem::path path)
             fileread::skipBytes(file, to_skip - 4);
             break;
         case HoeChunkType::EVENT:
-            hoe_file->parseEvent(file);
+            if (hoe_file->parseEvent(file))
+            {
+                file.close();
+                delete hoe_file;
+                return nullptr;
+            }
             break;
         case HoeChunkType::INSTANCE:
             // For now, we skip the INSTANCE sections
