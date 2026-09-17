@@ -27,7 +27,7 @@ HoeChunkType HoeChunk::getChunkType()
 **  HOE CONSTANT
 */
 
-HoeConstant::HoeConstant(std::uint32_t int_value)
+HoeConstant::HoeConstant(std::int32_t int_value)
     : constant_type_(HoeConstantType::INT)
     , int_value_(int_value)
 {}
@@ -52,7 +52,7 @@ HoeConstantType HoeConstant::getConstantType() const
     return constant_type_;
 }
 
-std::uint32_t HoeConstant::getIntValue() const
+std::int32_t HoeConstant::getIntValue() const
 {
     return int_value_;
 }
@@ -67,7 +67,7 @@ void HoeConstant::setConstantType(HoeConstantType constant_type)
         constant_type_ = constant_type;
 }
 
-void HoeConstant::setIntValue(std::uint32_t int_value)
+void HoeConstant::setIntValue(std::int32_t int_value)
 {
     int_value_ = int_value;
 }
@@ -240,7 +240,7 @@ std::vector<HoeConstant>& HoeEvent::getHoeConstants()
     return hoe_constants_;
 }
 
-std::vector<std::uint32_t>& HoeEvent::getM1()
+std::vector<std::int32_t>& HoeEvent::getM1()
 {
     return m1_;
 }
@@ -260,7 +260,7 @@ const std::vector<HoeConstant>& HoeEvent::getHoeConstants() const
     return hoe_constants_;
 }
 
-const std::vector<std::uint32_t>& HoeEvent::getM1() const
+const std::vector<std::int32_t>& HoeEvent::getM1() const
 {
     return m1_;
 }
@@ -1312,7 +1312,7 @@ std::ostream& operator<<(std::ostream& os, const HoeEvent& event)
         Indent::printIndent(os);
         os << "M1:" << std::endl;
         Indent::increaseIndent();
-        for (std::uint32_t m1 : event.getM1())
+        for (std::int32_t m1 : event.getM1())
         {
             Indent::printIndent(os);
             os << m1 << std::endl;

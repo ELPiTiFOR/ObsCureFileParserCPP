@@ -37,19 +37,19 @@ class HoeConstant
 public:
     HoeConstant() = default;
     HoeConstant(float float_value);
-    HoeConstant(std::uint32_t int_value);
+    HoeConstant(std::int32_t int_value);
     HoeConstant(HoeConstantType constant_type);
     HoeConstant(const HoeConstant& other);
     HoeConstantType getConstantType() const;
-    std::uint32_t getIntValue() const;
+    std::int32_t getIntValue() const;
     float getFloatValue() const;
 
     void setConstantType(HoeConstantType constant_type);
-    void setIntValue(std::uint32_t int_value);
+    void setIntValue(std::int32_t int_value);
     void setFloatValue(float float_value);
 private:
     HoeConstantType constant_type_;
-    std::uint32_t int_value_;
+    std::int32_t int_value_;
     float float_value_;
 };
 
@@ -70,11 +70,11 @@ public:
     std::vector<std::uint32_t>& getUkInts();
     std::vector<std::string>& getLStrings();
     std::vector<HoeConstant>& getHoeConstants();
-    std::vector<std::uint32_t>& getM1();
+    std::vector<std::int32_t>& getM1();
     const std::vector<std::uint32_t>& getUkInts() const;
     const std::vector<std::string>& getLStrings() const;
     const std::vector<HoeConstant>& getHoeConstants() const;
-    const std::vector<std::uint32_t>& getM1() const;
+    const std::vector<std::int32_t>& getM1() const;
     HoeScript* getScript() const;
 
     void setMagicNumber(float magic_number);
@@ -91,7 +91,7 @@ private:
     std::vector<std::uint32_t> uk_ints_;
     std::vector<std::string> lstrings_;
     std::vector<HoeConstant> hoe_constants_;
-    std::vector<std::uint32_t> m1_;
+    std::vector<std::int32_t> m1_;
     HoeScript* script_;
 };
 
