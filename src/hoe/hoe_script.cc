@@ -1716,7 +1716,7 @@ std::ostream& operator<<(std::ostream& os, const HoeNotEqual& not_equal)
 
 std::ostream& operator<<(std::ostream& os, const HoeGreaterThan& greater_than)
 {
-    os << *(greater_than.getExpression1()) << " < "
+    os << *(greater_than.getExpression1()) << " > "
         << *(greater_than.getExpression2());
     return os;
 }

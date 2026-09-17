@@ -150,6 +150,7 @@ std::string HoeEvent::getHoeVariableName(size_t index)
     globals.push_back("gIsAlive");
     globals.push_back("gHelpRespawn");
     globals.push_back("gCanBite");
+    globals.push_back("gState"); // Not sure
 
     // We check all the globals in lstrings_ first
     int globals_in_lstrings = 0;
