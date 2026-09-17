@@ -8,6 +8,7 @@
 #include "hoe/hoe_test.hh"
 #include "it/it_test.hh"
 #include "oci/room.hh"
+#include "ppm/ppm_test.hh"
 #include "sav/sav_test.hh"
 
 int main()
@@ -21,6 +22,7 @@ int main()
     savtest::test();
     configtest::test();
     hoetest::test();
+    ppmtest::test();
 
     return 0;
 }
