@@ -1,5 +1,6 @@
 #include "fileread.hh"
 
+#include "bytecounter/bytecounter.hh"
 #include "utils/utils.hh"
 
 std::uint32_t fileread::read4ByteMsb(std::ifstream& is)
@@ -7,6 +8,7 @@ std::uint32_t fileread::read4ByteMsb(std::ifstream& is)
     std::uint32_t item_type = 0;
     is.read(reinterpret_cast<char*>(&item_type), 4);
     item_type = utils::lsbOf(item_type);
+    ByteCounter::addToCounters(4);
     return item_type;
 }
 
@@ -14,6 +16,7 @@ std::uint32_t fileread::read4ByteLsb(std::ifstream& is)
 {
     std::uint32_t item_type = 0;
     is.read(reinterpret_cast<char*>(&item_type), 4);
+    ByteCounter::addToCounters(4);
     return item_type;
 }
 
@@ -22,6 +25,7 @@ std::uint16_t fileread::read2ByteMsb(std::ifstream& is)
     std::uint16_t res = 0;
     is.read(reinterpret_cast<char*>(&res), 2);
     res = utils::lsbOf(res);
+    ByteCounter::addToCounters(2);
     return res;
 }
 
@@ -29,6 +33,7 @@ std::uint16_t fileread::read2ByteLsb(std::ifstream& is)
 {
     std::uint16_t res = 0;
     is.read(reinterpret_cast<char*>(&res), 2);
+    ByteCounter::addToCounters(2);
     return res;
 }
 
@@ -36,6 +41,7 @@ std::uint8_t fileread::read1Byte(std::ifstream& is)
 {
     std::uint8_t res = 0;
     is.read(reinterpret_cast<char*>(&res), 1);
+    ByteCounter::addToCounters(1);
     return res;
 }
 
@@ -44,12 +50,18 @@ std::string fileread::readString(std::ifstream& is, int length)
     char buf[length + 1] = { 0 };
     is.read(reinterpret_cast<char*>(&buf[0]), length);
     std::string res(reinterpret_cast<char*>(&buf[0]));
+    ByteCounter::addToCounters(length);
     return res;
 }
 
 std::string fileread::readLString(std::ifstream& is)
 {
     std::uint32_t length = fileread::read4ByteMsb(is);
+    if (length > 100)
+    {
+        throw std::runtime_error("Length too big for an LString");
+    }
+
     return fileread::readString(is, length);
 }
 
@@ -59,6 +71,7 @@ float fileread::readFloatMsb(std::ifstream& is)
     void* res_v = &res;
     is.read(static_cast<char*>(res_v), 4);
     res = utils::lsbOfFloat(res);
+    ByteCounter::addToCounters(4);
     return res;
 }
 
@@ -67,6 +80,7 @@ float fileread::readFloatLsb(std::ifstream& is)
     float res = 0;
     void* res_v = &res;
     is.read(reinterpret_cast<char*>(res_v), 4);
+    ByteCounter::addToCounters(4);
     return res;
 }
 
@@ -91,8 +105,8 @@ bool fileread::areFilesEqual(std::filesystem::path path1,
         return true;
     }
 
-    std::ifstream file1(path1);
-    std::ifstream file2(path2);
+    std::ifstream file1(path1, std::ios::binary);
+    std::ifstream file2(path2, std::ios::binary);
 
     if (!file1 || !file2)
     {

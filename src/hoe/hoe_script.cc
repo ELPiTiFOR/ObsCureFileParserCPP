@@ -91,6 +91,12 @@ HoeImmediateArg* HoeImmediateArg::parseImmediateArg(std::ifstream& file)
     return immediate_arg;
 }
 
+void HoeImmediateArg::serialize(std::ofstream& file)
+{
+    filewrite::write1Byte(file, static_cast<std::uint32_t>(type_));
+    filewrite::write4ByteMsb(file, value_);
+}
+
 std::uint32_t HoeImmediateArg::getValue() const
 {
     return value_;
@@ -131,6 +137,12 @@ HoeConstantArg* HoeConstantArg::parseConstantArg(std::ifstream& file)
     }
     constant_arg->setExpression(expression);
     return constant_arg;
+}
+
+void HoeConstantArg::serialize(std::ofstream& file)
+{
+    filewrite::write1Byte(file, static_cast<std::uint32_t>(type_));
+    expression_->serialize(file);
 }
 
 HoeExpression* HoeConstantArg::getExpression()
@@ -185,15 +197,24 @@ HoeVariable* HoeVariable::parseVariable(std::ifstream& file)
 {
     std::uint32_t index = fileread::read4ByteMsb(file);
     HoeVariable* variable = new HoeVariable(index);
-    std::string name = CurrentEvent::getCurrentEvent()->getHoeVariableName(
-        index
-    );
-
-    if (name != "")
+    if (CurrentEvent::getCurrentEvent())
     {
-        variable->setName(name);
+        std::string name = CurrentEvent::getCurrentEvent()->getHoeVariableName(
+            index
+        );
+
+        if (name != "")
+        {
+            variable->setName(name);
+        }
     }
     return variable;
+}
+
+void HoeVariable::serialize(std::ofstream& file)
+{
+    filewrite::write4ByteMsb(file, static_cast<std::uint32_t>(type_));
+    filewrite::write4ByteMsb(file, index_);
 }
 
 std::uint32_t HoeVariable::getIndex() const
@@ -223,11 +244,24 @@ HoeConstantVal* HoeConstantVal::parseConstantVal(std::ifstream& file)
 {
     std::uint32_t index = fileread::read4ByteMsb(file);
     HoeConstantVal* constant_val = new HoeConstantVal(index);
-    HoeConstant* constant = CurrentEvent::getCurrentEvent()->getHoeConstant(
-        index
-    );
-    constant_val->setConstant(constant);
+    if (CurrentEvent::getCurrentEvent())
+    {
+        HoeConstant* constant = CurrentEvent::getCurrentEvent()->getHoeConstant(
+            index
+        );
+        constant_val->setConstant(constant);
+    }
+    else
+    {
+        constant_val->setConstant(nullptr);
+    }
     return constant_val;
+}
+
+void HoeConstantVal::serialize(std::ofstream& file)
+{
+    filewrite::write4ByteMsb(file, static_cast<std::uint32_t>(type_));
+    filewrite::write4ByteMsb(file, index_);
 }
 
 std::uint32_t HoeConstantVal::getIndex() const
@@ -260,6 +294,12 @@ HoeUkValue03* HoeUkValue03::parseUkValue03(std::ifstream& file)
     return uk_value_03;
 }
 
+void HoeUkValue03::serialize(std::ofstream& file)
+{
+    filewrite::write4ByteMsb(file, static_cast<std::uint32_t>(type_));
+    filewrite::write4ByteMsb(file, uk_int_);
+}
+
 std::uint32_t HoeUkValue03::getUkInt() const
 {
     return uk_int_;
@@ -273,19 +313,12 @@ HoeFunctionCall::HoeFunctionCall(std::string& name)
     , name_(name)
 {}
 
-std::string HoeFunctionCall::getName() const
+HoeFunctionCall::~HoeFunctionCall()
 {
-    return name_;
-}
-
-std::vector<HoeArgument*>& HoeFunctionCall::getArguments()
-{
-    return arguments_;
-}
-
-const std::vector<HoeArgument*>& HoeFunctionCall::getArguments() const
-{
-    return arguments_;
+    for (HoeArgument* argument : arguments_)
+    {
+        delete argument;
+    }
 }
 
 HoeFunctionCall* HoeFunctionCall::parseFunctionCall(std::ifstream& file)
@@ -303,14 +336,45 @@ HoeFunctionCall* HoeFunctionCall::parseFunctionCall(std::ifstream& file)
     return function_call;
 }
 
+void HoeFunctionCall::serialize(std::ofstream& file)
+{
+    filewrite::write4ByteMsb(file, static_cast<std::uint32_t>(type_));
+    filewrite::writeLString(file, name_);
+    filewrite::write4ByteMsb(file, arguments_.size());
+    for (HoeArgument* argument : arguments_)
+    {
+        argument->serialize(file);
+    }
+}
+
+std::string HoeFunctionCall::getName() const
+{
+    return name_;
+}
+
+std::vector<HoeArgument*>& HoeFunctionCall::getArguments()
+{
+    return arguments_;
+}
+
+const std::vector<HoeArgument*>& HoeFunctionCall::getArguments() const
+{
+    return arguments_;
+}
+
 /*
 ** HOE MATH FUNCTION
 */
 HoeMathFunction::HoeMathFunction(HoeMathFunctionType type)
     : HoeValue(HoeValueType::MATH_FUNCTION)
-    , type_(type)
+    , math_type_(type)
     , expression_(nullptr)
 {}
+
+HoeMathFunction::~HoeMathFunction()
+{
+    delete expression_;
+}
 
 HoeMathFunction* HoeMathFunction::parseMathFunction(std::ifstream& file)
 {
@@ -332,9 +396,17 @@ HoeMathFunction* HoeMathFunction::parseMathFunction(std::ifstream& file)
     return math_function;
 }
 
-HoeMathFunctionType HoeMathFunction::getType() const
+void HoeMathFunction::serialize(std::ofstream& file)
 {
-    return type_;
+    filewrite::write4ByteMsb(file, static_cast<std::uint32_t>(type_));
+    filewrite::write4ByteMsb(file, static_cast<std::uint32_t>(math_type_));
+    filewrite::write4ByteMsb(file, uk_int_);
+    expression_->serialize(file);
+}
+
+HoeMathFunctionType HoeMathFunction::getMathType() const
+{
+    return math_type_;
 }
 
 std::uint32_t HoeMathFunction::getUkInt() const
@@ -368,6 +440,32 @@ HoeUkFunctionCall::HoeUkFunctionCall(std::string& name)
     type_ = HoeValueType::UK_FUNCTION_CALL;
 }
 
+HoeUkFunctionCall* HoeUkFunctionCall::parseUkFunctionCall(std::ifstream& file)
+{
+    std::string name = fileread::readLString(file);
+    HoeUkFunctionCall* function_call = new HoeUkFunctionCall(name);
+
+    std::uint32_t nb_arguments = fileread::read4ByteMsb(file);
+    for (std::uint32_t i = 0; i < nb_arguments; i++)
+    {
+        HoeArgument* argument = HoeArgument::parseArgument(file);
+        function_call->getArguments().push_back(argument);
+    }
+
+    return function_call;
+}
+
+void HoeUkFunctionCall::serialize(std::ofstream& file)
+{
+    filewrite::write4ByteMsb(file, static_cast<std::uint32_t>(type_));
+    filewrite::writeLString(file, name_);
+    filewrite::write4ByteMsb(file, arguments_.size());
+    for (HoeArgument* argument : arguments_)
+    {
+        argument->serialize(file);
+    }
+}
+
 /*
 ** HOE RETURN
 */
@@ -378,6 +476,11 @@ HoeReturn::HoeReturn()
 HoeReturn* HoeReturn::parseReturn(std::ifstream& file)
 {
     return new HoeReturn();
+}
+
+void HoeReturn::serialize(std::ofstream& file)
+{
+    filewrite::write4ByteMsb(file, static_cast<std::uint32_t>(type_));
 }
 
 /*
@@ -395,6 +498,13 @@ HoeString* HoeString::parseString(std::ifstream& file)
     HoeString* hoe_string = new HoeString(name);
     return hoe_string;
 }
+
+void HoeString::serialize(std::ofstream& file)
+{
+    filewrite::write4ByteMsb(file, static_cast<std::uint32_t>(type_));
+    filewrite::writeLString(file, name_);
+}
+
 const std::string& HoeString::getName() const
 {
     return name_;
@@ -425,7 +535,7 @@ HoeValue* HoeValue::parseValue(std::ifstream& file)
     case HoeValueType::MATH_FUNCTION:
         return HoeMathFunction::parseMathFunction(file);
     case HoeValueType::UK_FUNCTION_CALL:
-        return HoeUkFunctionCall::parseFunctionCall(file);
+        return HoeUkFunctionCall::parseUkFunctionCall(file);
     case HoeValueType::RETURN:
         return HoeReturn::parseReturn(file);
     case HoeValueType::STRING:
@@ -438,6 +548,9 @@ HoeValue* HoeValue::parseValue(std::ifstream& file)
 
     return nullptr;
 }
+
+void HoeValue::serialize(std::ofstream& file)
+{}
 
 /*
 ** HOE VALEXPR
@@ -469,6 +582,14 @@ HoeValexpr* HoeValexpr::parseValexpr(std::ifstream& file)
     }
     valexpr->setValue(value);
     return valexpr;
+}
+
+void HoeValexpr::serialize(std::ofstream& file)
+{
+    filewrite::write4ByteMsb(file,
+        static_cast<std::uint32_t>(expression_type_)
+    );
+    value_->serialize(file);
 }
 
 HoeValue* HoeValexpr::getValue() const
@@ -687,6 +808,15 @@ HoeOperation::~HoeOperation()
     }
 }
 
+void HoeOperation::serialize(std::ofstream& file)
+{
+    filewrite::write4ByteMsb(file,
+        static_cast<std::uint32_t>(expression_type_)
+    );
+    value1_->serialize(file);
+    value2_->serialize(file);
+}
+
 HoeValue* HoeOperation::getValue1()
 {
     return value1_;
@@ -811,6 +941,14 @@ HoeAssign* HoeAssign::parseAssign(std::ifstream& file)
     return assign;
 }
 
+void HoeAssign::serialize(std::ofstream& file)
+{
+    filewrite::write4ByteMsb(file, static_cast<std::uint32_t>(op_code_));
+    filewrite::write4ByteMsb(file, static_cast<std::uint32_t>(not_));
+    expression1_->serialize(file);
+    expression2_->serialize(file);
+}
+
 HoeExpression* HoeAssign::getExpression1()
 {
     return expression1_;
@@ -933,6 +1071,13 @@ HoeBoolean* HoeBoolean::parseBoolean(std::ifstream& file)
     return boolean;
 }
 
+void HoeBoolean::serialize(std::ofstream& file)
+{
+    filewrite::write4ByteMsb(file, static_cast<std::uint32_t>(op_code_));
+    filewrite::write4ByteMsb(file, static_cast<std::uint32_t>(not_));
+    expression_->serialize(file);
+}
+
 HoeExpression* HoeBoolean::getExpression()
 {
     return expression_;
@@ -1022,6 +1167,14 @@ HoeComparison* HoeComparison::parseComparison(std::ifstream& file,
     return comparison;
 }
 
+void HoeComparison::serialize(std::ofstream& file)
+{
+    filewrite::write4ByteMsb(file, static_cast<std::uint32_t>(op_code_));
+    filewrite::write4ByteMsb(file, static_cast<std::uint32_t>(not_));
+    expression1_->serialize(file);
+    expression2_->serialize(file);
+}
+
 HoeExpression* HoeComparison::getExpression1()
 {
     return expression1_;
@@ -1103,6 +1256,23 @@ HoeIfThenIf* HoeIfThenIf::parseIfThenIf(std::ifstream& file)
     return if_then_if;
 }
 
+void HoeIfThenIf::serialize(std::ofstream& file)
+{
+    filewrite::write1Byte(file, static_cast<std::uint32_t>(type_));
+
+    filewrite::write4ByteMsb(file, conditions_.size());
+    for (HoeBlock* block : conditions_)
+    {
+        block->serialize(file);
+    }
+
+    filewrite::write4ByteMsb(file, body_.size());
+    for (HoeIfThen* if_then : body_)
+    {
+        if_then->serialize(file);
+    }
+}
+
 std::vector<HoeIfThen*>& HoeIfThenIf::getBody()
 {
     return body_;
@@ -1164,6 +1334,23 @@ HoeIfThenBlocks* HoeIfThenBlocks::parseIfThenBlocks(std::ifstream& file)
     return if_then_blocks;
 }
 
+void HoeIfThenBlocks::serialize(std::ofstream& file)
+{
+    filewrite::write1Byte(file, static_cast<std::uint32_t>(type_));
+
+    filewrite::write4ByteMsb(file, conditions_.size());
+    for (HoeBlock* block : conditions_)
+    {
+        block->serialize(file);
+    }
+
+    filewrite::write4ByteMsb(file, body_.size());
+    for (HoeBlock* block : body_)
+    {
+        block->serialize(file);
+    }
+}
+
 std::vector<HoeBlock*>& HoeIfThenBlocks::getBody()
 {
     return body_;
@@ -1189,6 +1376,9 @@ HoeIfThen::~HoeIfThen()
         delete block;
     }
 }
+
+// void HoeIfThen::serialize(std::ofstream& file)
+// {}
 
 HoeIfThen* HoeIfThen::parseIfThen(std::ifstream& file)
 {
@@ -1231,6 +1421,10 @@ HoeBlock::HoeBlock(const HoeBlock& other)
     : op_code_(other.op_code_)
     , not_(other.not_)
 {}
+
+void HoeBlock::serialize(std::ofstream& file)
+{}
+
 
 HoeBlock* HoeBlock::parseBlock(std::ifstream& file)
 {
@@ -1287,6 +1481,34 @@ void HoeBlock::setNot(bool not_bool)
 HoeMask::HoeMask(const std::string& name)
     : name_(name)
 {}
+
+HoeMask::~HoeMask()
+{
+    delete block_;
+    delete expression_;
+}
+
+void HoeMask::serialize(std::ofstream& file)
+{
+    filewrite::writeLString(file, name_);
+
+    filewrite::write4ByteMsb(file, uk_ints_.size());
+    for (std::uint32_t uk_int : uk_ints_)
+    {
+        filewrite::write4ByteMsb(file, uk_int);
+    }
+    filewrite::write4ByteMsb(file, m1_.size());
+    for (std::uint32_t m1 : m1_)
+    {
+        filewrite::write4ByteMsb(file, m1);
+    }
+
+    filewrite::write4ByteMsb(file, uk_int1_);
+    filewrite::write4ByteMsb(file, uk_int2_);
+    block_->serialize(file);
+    filewrite::write4ByteMsb(file, uk_int3_);
+    expression_->serialize(file);
+}
 
 const std::string& HoeMask::getName() const
 {
@@ -1387,6 +1609,31 @@ HoeScript::~HoeScript()
     for (HoeIfThen* if_then : if_thens_)
     {
         delete if_then;
+    }
+}
+
+void HoeScript::serialize(std::ofstream& file)
+{
+    if (mask_)
+    {
+        filewrite::write4ByteMsb(file, 1);
+        mask_->serialize(file);
+    }
+    else
+    {
+        filewrite::write4ByteMsb(file, 0);
+    }
+
+    filewrite::write4ByteMsb(file, blocks_.size());
+    for (HoeBlock* block : blocks_)
+    {
+        block->serialize(file);
+    }
+
+    filewrite::write4ByteMsb(file, if_thens_.size());
+    for (HoeIfThen* if_then : if_thens_)
+    {
+        if_then->serialize(file);
     }
 }
 
@@ -1943,7 +2190,7 @@ std::ostream& operator<<(std::ostream& os, const HoeFunctionCall& function_call)
 // Maybe I should do more research on that
 std::ostream& operator<<(std::ostream& os, const HoeMathFunction& math_function)
 {
-    switch (math_function.getType())
+    switch (math_function.getMathType())
     {
     case HoeMathFunctionType::SIN:
         os << "sin(";

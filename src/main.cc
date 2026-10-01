@@ -50,6 +50,31 @@ int main(int argc, char* argv[])
 
         commands::correctCrc32(std::string(argv[2]));
     }
+    else if (std::string(argv[1]) == "--hoe-extract-maps")
+    {
+        if (argc < 4)
+        {
+            std::cerr << "Please provide a path to the HOE file and an output"
+                << " folder path after \"--hoe-extract-maps\"" << std::endl;
+            return OCFP_MISSING_ARGUMENT;
+        }
+
+        commands::extractCollisions(std::string(argv[2]), std::string(argv[3]));
+    }
+    else if (std::string(argv[1]) == "--hoe-modify-map")
+    {
+        if (argc < 5)
+        {
+            std::cerr << "Please provide a path to the HOE file,"
+                << " an input file path and an index after \"--hoe-modify-map\""
+                << std::endl;
+            return OCFP_MISSING_ARGUMENT;
+        }
+
+        commands::modifyCollisions(std::string(argv[2]), std::string(argv[3]),
+            std::stol(argv[4]), std::string(argv[2])
+        );
+    }
     else if (std::string(argv[1]) == "test")
     {
         commands::test();

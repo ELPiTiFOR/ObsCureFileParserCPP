@@ -9,7 +9,7 @@
 
 std::uint32_t utils::lsbOf(std::uint32_t n)
 {
-    char buf[4] = {0};
+    char buf[64] = {0};
     char* buf_c = buf;
     void* buf_v = buf_c;
     std::uint32_t* buf_u = reinterpret_cast<std::uint32_t*>(buf_v);
@@ -26,7 +26,7 @@ std::uint32_t utils::lsbOf(std::uint32_t n)
 
 std::uint16_t utils::lsbOf(std::uint16_t n)
 {
-    char buf[2] = {0};
+    char buf[64] = {0};
     char* buf_c = buf;
     void* buf_v = buf_c;
     std::uint16_t* buf_u = reinterpret_cast<std::uint16_t*>(buf_v);
@@ -40,7 +40,7 @@ std::uint16_t utils::lsbOf(std::uint16_t n)
 
 float utils::lsbOfFloat(float n)
 {
-    char buf[4] = {0};
+    char buf[64] = {0};
     char* buf_c = buf;
     void* buf_v = buf_c;
     float* buf_f = reinterpret_cast<float*>(buf_v);

@@ -3,6 +3,11 @@
 /*
 ** PPM PIXEL
 */
+PpmPixel::PpmPixel(const PpmPixel& other)
+    : red_(other.red_)
+    , green_(other.green_)
+    , blue_(other.blue_)
+{}
 
 PpmPixel::PpmPixel(std::uint32_t red, std::uint32_t green, std::uint32_t blue)
     : red_(red)

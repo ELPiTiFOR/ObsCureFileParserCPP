@@ -84,8 +84,9 @@ class HoeArgument
 public:
     HoeArgument(HoeArgumentType type);
     virtual ~HoeArgument();
+    virtual void serialize(std::ofstream& file) = 0;
     static HoeArgument* parseArgument(std::ifstream& file);
-private:
+protected:
     HoeArgumentType type_;
 };
 
@@ -94,6 +95,7 @@ class HoeImmediateArg : public HoeArgument
 public:
     HoeImmediateArg(std::uint32_t value);
     static HoeImmediateArg* parseImmediateArg(std::ifstream& file);
+    void serialize(std::ofstream& file);
     std::uint32_t getValue() const;
     void setValue(std::uint32_t value);
 private:
@@ -106,6 +108,7 @@ public:
     HoeValue(HoeValueType type);
     virtual ~HoeValue() = default;
     static HoeValue* parseValue(std::ifstream& file);
+    virtual void serialize(std::ofstream& file);
 protected:
     HoeValueType type_;
 };
@@ -115,10 +118,11 @@ class HoeExpression
 public:
     HoeExpression(HoeExpressionType expressionType);
     virtual ~HoeExpression();
+    virtual void serialize(std::ofstream& file) = 0;
     static HoeExpression* parseExpression(std::ifstream& file);
     HoeExpressionType getExpressionType();
     void getExpressionType(HoeExpressionType expression_type);
-private:
+protected:
     HoeExpressionType expression_type_;
 };
 
@@ -127,6 +131,7 @@ class HoeOperation : public HoeExpression
 public:
     HoeOperation(HoeExpressionType expression_type);
     ~HoeOperation() override;
+    void serialize(std::ofstream& file);
     HoeValue* getValue1();
     HoeValue* getValue2();
     const HoeValue* getValue1() const;
@@ -144,6 +149,7 @@ public:
     HoeConstantArg();
     ~HoeConstantArg();
     static HoeConstantArg* parseConstantArg(std::ifstream& file);
+    void serialize(std::ofstream& file);
     HoeExpression* getExpression();
     const HoeExpression* getExpression() const;
     void setExpression(HoeExpression* expression);
@@ -156,6 +162,7 @@ class HoeVariable : public HoeValue
 public:
     HoeVariable(std::uint32_t index);
     static HoeVariable* parseVariable(std::ifstream& file);
+    void serialize(std::ofstream& file);
     std::uint32_t getIndex() const;
     const std::string& getName() const;
     void setName(const std::string& name);
@@ -169,6 +176,7 @@ class HoeConstantVal : public HoeValue
 public:
     HoeConstantVal(std::uint32_t index);
     static HoeConstantVal* parseConstantVal(std::ifstream& file);
+    void serialize(std::ofstream& file);
     std::uint32_t getIndex() const;
     HoeConstant* getConstant() const;
     void setConstant(HoeConstant* constant);
@@ -182,6 +190,7 @@ class HoeUkValue03 : public HoeValue
 public:
     HoeUkValue03(std::uint32_t uk_int);
     static HoeUkValue03* parseUkValue03(std::ifstream& file);
+    void serialize(std::ofstream& file);
     std::uint32_t getUkInt() const;
 private:
     std::uint32_t uk_int_;
@@ -191,7 +200,9 @@ class HoeFunctionCall : public HoeValue
 {
 public:
     HoeFunctionCall(std::string& name);
+    ~HoeFunctionCall();
     static HoeFunctionCall* parseFunctionCall(std::ifstream& file);
+    virtual void serialize(std::ofstream& file);
     std::string getName() const;
     std::vector<HoeArgument*>& getArguments();
     const std::vector<HoeArgument*>& getArguments() const;
@@ -204,14 +215,16 @@ class HoeMathFunction : public HoeValue
 {
 public:
     HoeMathFunction(HoeMathFunctionType type);
+    ~HoeMathFunction();
     static HoeMathFunction* parseMathFunction(std::ifstream& file);
-    HoeMathFunctionType getType() const;
+    void serialize(std::ofstream& file);
+    HoeMathFunctionType getMathType() const;
     std::uint32_t getUkInt() const;
     HoeExpression* getExpression() const;
     void setUkInt(std::uint32_t uk_int);
     void setExpression(HoeExpression* expression);
 protected:
-    HoeMathFunctionType type_;
+    HoeMathFunctionType math_type_;
     std::uint32_t uk_int_;
     HoeExpression* expression_;
 };
@@ -220,6 +233,8 @@ class HoeUkFunctionCall : public HoeFunctionCall
 {
 public:
     HoeUkFunctionCall(std::string& name);
+    static HoeUkFunctionCall* parseUkFunctionCall(std::ifstream& file);
+    void serialize(std::ofstream& file) override;
 private:
 };
 
@@ -228,6 +243,7 @@ class HoeReturn : public HoeValue
 public:
     HoeReturn();
     static HoeReturn* parseReturn(std::ifstream& file);
+    void serialize(std::ofstream& file);
 private:
 };
 
@@ -236,6 +252,7 @@ class HoeString : public HoeValue
 public:
     HoeString(const std::string& name);
     static HoeString* parseString(std::ifstream& file);
+    void serialize(std::ofstream& file);
     const std::string& getName() const;
 private:
     std::string name_;
@@ -248,6 +265,7 @@ public:
     HoeValexpr();
     ~HoeValexpr() override;
     static HoeValexpr* parseValexpr(std::ifstream& file);
+    void serialize(std::ofstream& file);
     HoeValue* getValue() const;
     void setValue(HoeValue* value);
 private:
@@ -318,11 +336,12 @@ public:
     HoeBlock(HoeOpCode op_code);
     HoeBlock(const HoeBlock& other);
     virtual ~HoeBlock() = default;
+    virtual void serialize(std::ofstream& file);
     static HoeBlock* parseBlock(std::ifstream& file);
     bool getNot() const;
 
     void setNot(bool not_bool);
-private:
+protected:
     HoeOpCode op_code_;
     bool not_;
 };
@@ -333,6 +352,7 @@ public:
     HoeAssign();
     ~HoeAssign() override;
     static HoeAssign* parseAssign(std::ifstream& file);
+    void serialize(std::ofstream& file);
     HoeExpression* getExpression1();
     HoeExpression* getExpression2();
     const HoeExpression* getExpression1() const;
@@ -352,6 +372,7 @@ public:
     ~HoeComparison() override;
     static HoeComparison* parseComparison(std::ifstream& file,
         HoeOpCode op_code);
+    void serialize(std::ofstream& file);
     HoeExpression* getExpression1();
     HoeExpression* getExpression2();
     const HoeExpression* getExpression1() const;
@@ -423,6 +444,7 @@ public:
     HoeBoolean();
     ~HoeBoolean() override;
     static HoeBoolean* parseBoolean(std::ifstream& file);
+    void serialize(std::ofstream& file);
     HoeExpression* getExpression();
     const HoeExpression* getExpression() const;
     void setExpression(HoeExpression* expression);
@@ -435,10 +457,11 @@ class HoeIfThen
 public:
     HoeIfThen(HoeIfThenType type);
     virtual ~HoeIfThen();
+    virtual void serialize(std::ofstream& file) = 0;
     static HoeIfThen* parseIfThen(std::ifstream& file);
     std::vector<HoeBlock*>& getConditions();
     const std::vector<HoeBlock*>& getConditions() const;
-private:
+protected:
     HoeIfThenType type_;
     std::vector<HoeBlock*> conditions_;
 };
@@ -449,6 +472,7 @@ public:
     HoeIfThenIf();
     ~HoeIfThenIf();
     static HoeIfThenIf* parseIfThenIf(std::ifstream& file);
+    void serialize(std::ofstream& file);
     std::vector<HoeIfThen*>& getBody();
     const std::vector<HoeIfThen*>& getBody() const;
 private:
@@ -461,6 +485,7 @@ public:
     HoeIfThenBlocks();
     ~HoeIfThenBlocks();
     static HoeIfThenBlocks* parseIfThenBlocks(std::ifstream& file);
+    void serialize(std::ofstream& file);
     std::vector<HoeBlock*>& getBody();
     const std::vector<HoeBlock*>& getBody() const;
 private:
@@ -471,6 +496,8 @@ class HoeMask
 {
 public:
     HoeMask(const std::string& name);
+    ~HoeMask();
+    void serialize(std::ofstream& file);
     const std::string& getName() const;
     std::vector<std::uint32_t>& getUkInts();
     const std::vector<std::uint32_t>& getUkInts() const;
@@ -504,6 +531,7 @@ public:
     HoeScript();
     HoeScript(const HoeScript& other);
     ~HoeScript();
+    void serialize(std::ofstream& file);
     void parseHoeBlock(std::ifstream& file);
     void parseHoeMask(std::ifstream& file);
     int parseHoeScript(std::ifstream& file);

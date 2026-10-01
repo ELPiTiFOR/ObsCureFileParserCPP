@@ -4,6 +4,7 @@
 #include <cstdint>
 
 #include "config/config.hh"
+#include "fileread/fileread.hh"
 #include "fileread/fileread_test.hh"
 #include "oci/room.hh"
 #include "test.hh"
@@ -91,6 +92,40 @@ namespace hoetest
         }
 
         if (map.getCells().size() != 0xA95)
+        {
+            return 1;
+        }
+
+        // checking a cell
+        HoeCollisionCell& cell = map.getCells().at(10);
+        if (cell.getUkBool1() != true)
+        {
+            return 1;
+        }
+
+        if (cell.getUkBool2() != true)
+        {
+            return 1;
+        }
+
+        if (cell.getFlagsAndIndex() != 0xc00a)
+        {
+            return 1;
+        }
+
+        // checking another cell
+        HoeCollisionCell& cell_2 = map.getCells().at(0x17A);
+        if (cell_2.getUkBool1() != false)
+        {
+            return 1;
+        }
+
+        if (cell_2.getUkBool2() != true)
+        {
+            return 1;
+        }
+
+        if (cell_2.getFlagsAndIndex() != 0x417A)
         {
             return 1;
         }
@@ -212,6 +247,75 @@ namespace hoetest
 
         delete hoe_file;
         return 0;
+    }
+
+    bool testCollisionsMod()
+    {
+        std::filesystem::path hoe_path = std::filesystem::current_path();
+        hoe_path.append("test");
+        hoe_path.append("resources");
+        std::filesystem::path ppm_path = hoe_path;
+        hoe_path.append("b008_mod_collisions.hoe");
+        ppm_path.append("b008_mod_collisions.ppm");
+
+        HoeFile* hoe_file = HoeFile::makeFile(hoe_path);
+        if (!hoe_file) return 1;
+
+        HoeCollisions* collisions = hoe_file->getCollisions();
+        if (!collisions)
+        {
+            return 1;
+        }
+
+        if (hoe_file->modifyCollisionsMap(ppm_path, 0))
+        {
+            return 1;
+        }
+
+        hoe_file->serialize(".\\test\\results\\b008_mod.hoe2");
+
+        if (collisions->getMaps().size() != 1) return 1;
+        HoeCollisionsMap& map = collisions->getMaps().at(0);
+        std::vector<HoeCollisionCell>& cells = map.getCells();
+        if (cells.size() != 6) return 1;
+
+        if (cells.at(0).getUkBool1()) return 1;
+        if (!cells.at(0).getUkBool2()) return 1;
+        if (!cells.at(1).getUkBool1()) return 1;
+        if (!cells.at(1).getUkBool2()) return 1;
+        if (cells.at(2).getUkBool1()) return 1;
+        if (!cells.at(2).getUkBool2()) return 1;
+        if (!cells.at(3).getUkBool1()) return 1;
+        if (!cells.at(3).getUkBool2()) return 1;
+        if (cells.at(4).getUkBool1()) return 1;
+        if (cells.at(4).getUkBool2()) return 1;
+        if (cells.at(5).getUkBool1()) return 1;
+        if (cells.at(5).getUkBool2()) return 1;
+
+        return 0;
+    }
+
+    bool testUkFunctionCall()
+    {
+        std::filesystem::path my_path = std::filesystem::current_path();
+        my_path.append("test");
+        std::filesystem::path out_path = my_path;
+        my_path.append("resources");
+        my_path.append("mask_uk_function_call.txt");
+        out_path.append("results");
+        out_path.append("maks_uk_function_call_re.txt");
+
+        std::ifstream file(my_path, std::ios::binary);
+        std::ofstream file_out(out_path, std::ios::binary);
+
+        HoeExpression* exp = HoeExpression::parseExpression(file);
+        exp->serialize(file_out);
+
+        file.close();
+        file_out.close();
+
+        delete exp;
+        return !fileread::areFilesEqual(my_path, out_path);
     }
 
     // The HoeScript class does not define it as a "header", but I wanted to
@@ -409,6 +513,79 @@ namespace hoetest
         return testPrintRoom("e103");
     }
 
+    bool testShom01InstanceA003()
+    {
+        std::filesystem::path my_path = std::filesystem::current_path();
+        my_path.append("test");
+        my_path.append("resources");
+        my_path.append("a003.hoe");
+
+        HoeFile* hoe_file = HoeFile::makeFile(my_path);
+        if (!hoe_file) return 1;
+
+        HoeInstance* shom01 = hoe_file->getInstance("shom01");
+        if (!shom01) return 1;
+
+        if (shom01->getUkByte1() != 1) return 1;
+        if (shom01->getLength() != 0x13C) return 1;
+        if (shom01->getUkInt1() != 0x1F) return 1;
+        if (shom01->getEventType() != "shom") return 1;
+        if (shom01->getParams() != "2") return 1;
+
+        std::uint32_t x = std::bit_cast<std::uint32_t>(
+            shom01->getX()
+        );
+        if (x != 0x466801AB)
+        {
+            return 1;
+        }
+
+        return 0;
+    }
+
+    bool testParseB100()
+    {
+        std::filesystem::path my_path = std::filesystem::current_path();
+        my_path.append("test");
+        my_path.append("resources");
+        my_path.append("b100.hoe");
+
+        HoeFile* hoe_file = HoeFile::makeFile(my_path);
+        if (!hoe_file) return 1;
+
+        return 0;
+    }
+
+    bool testParseD005()
+    {
+        std::filesystem::path my_path = std::filesystem::current_path();
+        my_path.append("test");
+        my_path.append("resources");
+        my_path.append("d005.hoe");
+
+        HoeFile* hoe_file = HoeFile::makeFile(my_path);
+        if (!hoe_file) return 1;
+
+        return 0;
+    }
+
+    bool testReserializeA003()
+    {
+        std::filesystem::path output_path = std::filesystem::current_path();
+        std::filesystem::path my_path = std::filesystem::current_path();
+        output_path.append("test");
+        output_path.append("results");
+        output_path.append("a003_re.hoe");
+        my_path.append("test");
+        my_path.append("resources");
+        my_path.append("a003.hoe");
+
+        HoeFile* hoe_file = HoeFile::makeFile(my_path);
+        hoe_file->serialize(output_path);
+
+        return !fileread::areFilesEqual(my_path, output_path);
+    }
+
     bool testParseAllRooms()
     {
         std::string filename = "OCFP.config";
@@ -424,8 +601,22 @@ namespace hoetest
                 data_folder_path, room.id, oci::RoomFileType::HOE
             );
 
-            HoeFile* hoe_file = HoeFile::makeFile(file_path);
-            if (!hoe_file) return 1;
+            try
+            {
+                HoeFile* hoe_file = HoeFile::makeFile(file_path);
+                if (!hoe_file)
+                {
+                    std::cerr << "ERROR while parsing " << room.id << std::endl;
+                    return 1;
+                }
+            }
+            catch (std::exception& e)
+            {
+                std::string message(e.what());
+                message += " at room ";
+                message += room.id;
+                throw std::runtime_error(message);
+            }
         }
 
         return 0;
@@ -452,13 +643,72 @@ namespace hoetest
             output_path.append("all_rooms");
             output_path.append(room.id + ".hoe.txt");
 
-            HoeFile* hoe_file = HoeFile::makeFile(file_path);
-            if (!hoe_file) return 1;
+            HoeFile* hoe_file = nullptr;
+            try
+            {
+                hoe_file = HoeFile::makeFile(file_path);
+                if (!hoe_file) return 1;
+            }
+            catch (std::exception& e)
+            {
+                std::string message(e.what());
+                message += " at room ";
+                message += room.id;
+                throw std::runtime_error(message);
+            }
 
             std::ofstream file(output_path, std::ios::binary);
             file << *hoe_file;
 
             file.close();
+        }
+
+        return 0;
+    }
+
+    bool testReserializeAllRooms()
+    {
+        std::string filename = "OCFP.config";
+        Config config(filename);
+        std::string data_folder_str = config.getValue(
+            "DATA_FOLDER_DEFAULT_PATH"
+        );
+        std::filesystem::path data_folder_path(data_folder_str);
+
+        std::filesystem::path output_dir_path = std::filesystem::current_path();
+        output_dir_path.append("test");
+        output_dir_path.append("results");
+        output_dir_path.append("all_hoe_reserialized");
+        std::filesystem::create_directories(output_dir_path);
+
+        for (oci::Room& room : oci::all_rooms)
+        {
+            std::filesystem::path file_path = oci::getRoomFilePath(
+                data_folder_path, room.id, oci::RoomFileType::HOE
+            );
+
+            std::filesystem::path output_path = output_dir_path;
+            output_path.append(room.id + "_re.hoe");
+
+            HoeFile* hoe_file = nullptr;
+            try
+            {
+                hoe_file = HoeFile::makeFile(file_path);
+                if (!hoe_file) return 1;
+            }
+            catch (std::exception& e)
+            {
+                std::string message(e.what());
+                message += " at room ";
+                message += room.id;
+                throw std::runtime_error(message);
+            }
+
+            hoe_file->serialize(output_path);
+            if (!fileread::areFilesEqual(file_path, output_path))
+            {
+                return 1;
+            }
         }
 
         return 0;
@@ -470,6 +720,9 @@ bool hoetest::test()
     RUN_TEST(hoetest::testCollisionsHeaderB008)
     RUN_TEST(hoetest::testCollisionsMapB008)
     RUN_TEST(hoetest::testCollisionsFinalB008)
+    RUN_TEST(hoetest::testCollisionsMod)
+    RUN_TEST(hoetest::testUkFunctionCall)
+    RUN_TEST(hoetest::testReserializeA003)
     RUN_TEST(hoetest::testEventCinHeaderB008)
     RUN_TEST(hoetest::testEventCinScriptB008)
     RUN_TEST(hoetest::testEventCinPrintScriptB008)
@@ -478,6 +731,9 @@ bool hoetest::test()
     RUN_TEST(hoetest::testPrintB000)
     RUN_TEST(hoetest::testPrintA003)
     RUN_TEST(hoetest::testPrintE103)
+    RUN_TEST(hoetest::testShom01InstanceA003)
+    RUN_TEST(hoetest::testParseB100)
+    RUN_TEST(hoetest::testParseD005)
 
     try
     {
@@ -497,10 +753,11 @@ bool hoetest::test()
 
         RUN_TEST(hoetest::testParseAllRooms)
         RUN_TEST(hoetest::testPrintAllRooms)
+        RUN_TEST(hoetest::testReserializeAllRooms)
     } catch (std::exception& e)
     {
-        std::cerr << "[HOETEST::TESTPARSEALLROOMS ABORTED]" << std::endl;
-        std::cerr << "[HOETEST::TESTPRINTALLROOMS ABORTED]" << std::endl;
+        std::cerr << "[HOETEST::TESTPARSEALLROOMS ABORTED]" << e.what() << std::endl;
+        std::cerr << "[HOETEST::TESTPRINTALLROOMS ABORTED]" << e.what()<< std::endl;
     }
     // TODO: test some cells in the collisions map
 

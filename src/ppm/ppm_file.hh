@@ -10,6 +10,7 @@ class PpmPixel
 {
 public:
     PpmPixel(std::uint32_t red, std::uint32_t green, std::uint32_t blue);
+    PpmPixel(const PpmPixel& ppm_pixel);
     std::uint32_t getRed() const;
     std::uint32_t getGreen() const;
     std::uint32_t getBlue() const;
