@@ -72,6 +72,11 @@ std::vector<HoeConstant>& HoeInstanceEvent::getConstants()
     return constants_;
 }
 
+const std::vector<HoeConstant>& HoeInstanceEvent::getConstants() const
+{
+    return constants_;
+}
+
 void HoeInstanceEvent::setLen(std::uint32_t le)
 {
     len_ = le;
@@ -391,7 +396,15 @@ std::vector<std::string>& HoeInstance::getLStrings()
 {
     return lstrings_;
 }
+const std::vector<std::string>& HoeInstance::getLStrings() const
+{
+    return lstrings_;
+}
 std::vector<HoeInstanceEvent>& HoeInstance::getEvents()
+{
+    return events_;
+}
+const std::vector<HoeInstanceEvent>& HoeInstance::getEvents() const
 {
     return events_;
 }
@@ -400,6 +413,10 @@ std::uint32_t HoeInstance::getUkInt4() const
     return uk_int4_;
 }
 std::vector<HoeInstanceGlobal>& HoeInstance::getGlobals()
+{
+    return globals_;
+}
+const std::vector<HoeInstanceGlobal>& HoeInstance::getGlobals() const
 {
     return globals_;
 }
@@ -611,42 +628,42 @@ void HoePostImports::serialize(std::ofstream& file)
     filewrite::write4ByteMsb(file, uk_int6_);
 }
 
-std::uint32_t HoePostImports::getLength()
+std::uint32_t HoePostImports::getLength() const
 {
     return length_;
 }
 
-std::uint32_t HoePostImports::getUkInt1()
+std::uint32_t HoePostImports::getUkInt1() const
 {
     return uk_int1_;
 }
 
-std::uint32_t HoePostImports::getUkInt2()
+std::uint32_t HoePostImports::getUkInt2() const
 {
     return uk_int2_;
 }
 
-std::uint32_t HoePostImports::getUkInt3()
+std::uint32_t HoePostImports::getUkInt3() const
 {
     return uk_int3_;
 }
 
-std::string HoePostImports::getLString()
+std::string HoePostImports::getLString() const
 {
     return lstring_;
 }
 
-std::uint32_t HoePostImports::getUkInt4()
+std::uint32_t HoePostImports::getUkInt4() const
 {
     return uk_int4_;
 }
 
-std::uint32_t HoePostImports::getUkInt5()
+std::uint32_t HoePostImports::getUkInt5() const
 {
     return uk_int5_;
 }
 
-std::uint32_t HoePostImports::getUkInt6()
+std::uint32_t HoePostImports::getUkInt6() const
 {
     return uk_int6_;
 }
@@ -717,12 +734,12 @@ void HoeImports::serialize(std::ofstream& file)
     }
 }
 
-std::uint32_t HoeImports::getLength()
+std::uint32_t HoeImports::getLength() const
 {
     return length_;
 }
 
-HoeImportsType HoeImports::getImportsType()
+HoeImportsType HoeImports::getImportsType() const
 {
     return imports_type_;
 }
@@ -733,6 +750,16 @@ std::vector<std::string>& HoeImports::getLStrings()
 }
 
 std::vector<HoePostImports>& HoeImports::getPostImports()
+{
+    return post_imports_;
+}
+
+const std::vector<std::string>& HoeImports::getLStrings() const
+{
+    return lstrings_;
+}
+
+const std::vector<HoePostImports>& HoeImports::getPostImports() const
 {
     return post_imports_;
 }
@@ -1298,32 +1325,37 @@ void HoeCollisionsPostMap::serialize(std::ofstream& file)
     }
 }
 
-std::uint32_t HoeCollisionsPostMap::getUkInt1()
+std::uint32_t HoeCollisionsPostMap::getUkInt1() const
 {
     return uk_int1_;
 }
 
-std::uint32_t HoeCollisionsPostMap::getUkInt2()
+std::uint32_t HoeCollisionsPostMap::getUkInt2() const
 {
     return uk_int2_;
 }
 
-std::uint32_t HoeCollisionsPostMap::getUkInt3()
+std::uint32_t HoeCollisionsPostMap::getUkInt3() const
 {
     return uk_int3_;
 }
 
-std::uint32_t HoeCollisionsPostMap::getUkInt4()
+std::uint32_t HoeCollisionsPostMap::getUkInt4() const
 {
     return uk_int4_;
 }
 
-std::uint32_t HoeCollisionsPostMap::getUkInt5()
+std::uint32_t HoeCollisionsPostMap::getUkInt5() const
 {
     return uk_int5_;
 }
 
 std::vector<std::uint32_t>& HoeCollisionsPostMap::getUkInts()
+{
+    return uk_ints_;
+}
+
+const std::vector<std::uint32_t>& HoeCollisionsPostMap::getUkInts() const
 {
     return uk_ints_;
 }
@@ -1447,69 +1479,79 @@ std::uint32_t HoeCollisionsMap::getMaxUkShort2()
     return max;
 }
 
-std::uint32_t HoeCollisionsMap::getIndex()
+std::uint32_t HoeCollisionsMap::getIndex() const
 {
     return index_;
 }
 
-std::uint32_t HoeCollisionsMap::getWidth()
+std::uint32_t HoeCollisionsMap::getWidth() const
 {
     return width_;
 }
 
-std::uint32_t HoeCollisionsMap::getHeight()
+std::uint32_t HoeCollisionsMap::getHeight() const
 {
     return height_;
 }
 
-float HoeCollisionsMap::getUkFloat1()
+float HoeCollisionsMap::getUkFloat1() const
 {
     return uk_float1_;
 }
 
-float HoeCollisionsMap::getUkFloat2()
+float HoeCollisionsMap::getUkFloat2() const
 {
     return uk_float2_;
 }
 
-float HoeCollisionsMap::getUkFloat3()
+float HoeCollisionsMap::getUkFloat3() const
 {
     return uk_float3_;
 }
 
-float HoeCollisionsMap::getUkFloat4()
+float HoeCollisionsMap::getUkFloat4() const
 {
     return uk_float4_;
 }
 
-float HoeCollisionsMap::getUkFloat5()
+float HoeCollisionsMap::getUkFloat5() const
 {
     return uk_float5_;
 }
 
-float HoeCollisionsMap::getUkFloat6()
+float HoeCollisionsMap::getUkFloat6() const
 {
     return uk_float6_;
 }
 
-float HoeCollisionsMap::getUkFloat7()
+float HoeCollisionsMap::getUkFloat7() const
 {
     return uk_float7_;
 }
 
-float HoeCollisionsMap::getUkFloat8()
+float HoeCollisionsMap::getUkFloat8() const
 {
     return uk_float8_;
 }
 
-// uint32_t HoeCollisionsMap::getNbCells()
-// {
-//     return nb_cells_;
-// }
-
 std::vector<HoeCollisionCell>& HoeCollisionsMap::getCells()
 {
     return cells_;
+}
+
+const std::vector<HoeCollisionCell>& HoeCollisionsMap::getCells() const
+{
+    return cells_;
+}
+
+std::vector<HoeCollisionsPostMap>& HoeCollisionsMap::getPostMaps()
+{
+    return post_maps_;
+}
+
+const std::vector<HoeCollisionsPostMap>& HoeCollisionsMap::getPostMaps() const
+{
+    return post_maps_;
 }
 
 void HoeCollisionsMap::setIndex(uint32_t index)
@@ -1703,42 +1745,42 @@ void HoeCollisions::serialize(std::ofstream& file)
     }
 }
 
-std::uint32_t HoeCollisions::getLength()
+std::uint32_t HoeCollisions::getLength() const
 {
     return length_;
 }
 
-std::uint32_t HoeCollisions::getUkInt1()
+std::uint32_t HoeCollisions::getUkInt1() const
 {
     return uk_int1_;
 }
 
 
-std::string HoeCollisions::getRoomId()
+std::string HoeCollisions::getRoomId() const
 {
     return room_id_;
 }
 
 
-std::uint32_t HoeCollisions::getUkInt2()
+std::uint32_t HoeCollisions::getUkInt2() const
 {
     return uk_int2_;
 }
 
 
-float HoeCollisions::getUkFloat1()
+float HoeCollisions::getUkFloat1() const
 {
     return uk_float1_;
 }
 
 
-float HoeCollisions::getUkFloat2()
+float HoeCollisions::getUkFloat2() const
 {
     return uk_float2_;
 }
 
 
-float HoeCollisions::getUkFloat3()
+float HoeCollisions::getUkFloat3() const
 {
     return uk_float3_;
 }
@@ -1748,77 +1790,82 @@ std::vector<HoeCollisionsMap>& HoeCollisions::getMaps()
     return maps_;
 }
 
-std::uint32_t HoeCollisions::getWidth()
+const std::vector<HoeCollisionsMap>& HoeCollisions::getMaps() const
+{
+    return maps_;
+}
+
+std::uint32_t HoeCollisions::getWidth() const
 {
     return width_;
 }
 
-std::uint32_t HoeCollisions::getHeight()
+std::uint32_t HoeCollisions::getHeight() const
 {
     return height_;
 }
 
-float HoeCollisions::getUkFloat4()
+float HoeCollisions::getUkFloat4() const
 {
     return uk_float4_;
 }
 
-float HoeCollisions::getUkFloat5()
+float HoeCollisions::getUkFloat5() const
 {
     return uk_float5_;
 }
 
-float HoeCollisions::getUkFloat6()
+float HoeCollisions::getUkFloat6() const
 {
     return uk_float6_;
 }
 
-float HoeCollisions::getUkFloat7()
+float HoeCollisions::getUkFloat7() const
 {
     return uk_float7_;
 }
 
-float HoeCollisions::getUkFloat8()
+float HoeCollisions::getUkFloat8() const
 {
     return uk_float8_;
 }
 
-float HoeCollisions::getUkFloat9()
+float HoeCollisions::getUkFloat9() const
 {
     return uk_float9_;
 }
 
-std::uint32_t HoeCollisions::getUkInt3()
+std::uint32_t HoeCollisions::getUkInt3() const
 {
     return uk_int3_;
 }
 
-std::uint32_t HoeCollisions::getUkInt4()
+std::uint32_t HoeCollisions::getUkInt4() const
 {
     return uk_int4_;
 }
 
-std::uint32_t HoeCollisions::getUkInt5()
+std::uint32_t HoeCollisions::getUkInt5() const
 {
     return uk_int5_;
 }
 
-std::uint32_t HoeCollisions::getUkInt6()
+std::uint32_t HoeCollisions::getUkInt6() const
 {
     return uk_int6_;
 }
 
-std::uint32_t HoeCollisions::getUkInt7()
+std::uint32_t HoeCollisions::getUkInt7() const
 {
     return uk_int7_;
 }
 
-std::uint32_t HoeCollisions::getUkInt8()
+std::uint32_t HoeCollisions::getUkInt8() const
 {
     return uk_int8_;
 }
 
-std::uint32_t HoeCollisions::getUkInt9()
+std::uint32_t HoeCollisions::getUkInt9() const
 {
     return uk_int9_;
 }
@@ -2501,20 +2548,196 @@ std::ostream& operator<<(std::ostream& os, const HoeFile& hoe_file)
     return os;
 }
 
-std::ostream& operator<<(std::ostream& os, const HoeCollisions& collisions)
+std::ostream& operator<<(std::ostream& os, const HoePostCollisions& post)
 {
-    os << "[Check .ppm file]";
+    os << "HoePostCollisions {" << std::endl;
+    Indent::increaseIndent();
+
+    Indent::printIndent(os);
+    os << "UkFloat1: " << post.getUkFloat1() << std::endl;
+    Indent::printIndent(os);
+    os << "UkFloat2: " << post.getUkFloat2() << std::endl;
+    Indent::printIndent(os);
+    os << "UkFloat3: " << post.getUkFloat3() << std::endl;
+    Indent::printIndent(os);
+    os << "UkFloat4: " << post.getUkFloat4() << std::endl;
+    Indent::printIndent(os);
+    os << "UkFloat5: " << post.getUkFloat5() << std::endl;
+    Indent::printIndent(os);
+    os << "UkFloat6: " << post.getUkFloat6() << std::endl;
+
+    Indent::decreaseIndent();
+    Indent::printIndent(os);
+    os << "}";
+    return os;
+}
+
+std::ostream& operator<<(std::ostream& os, const HoeCollisionsPostMap& post)
+{
+    os << "HoeCollisionsPostMap {" << std::endl;
+    Indent::increaseIndent();
+
+    Indent::printIndent(os);
+    os << "UkInt1: " << post.getUkInt1() << std::endl;
+    Indent::printIndent(os);
+    os << "UkInt2: " << post.getUkInt2() << std::endl;
+    Indent::printIndent(os);
+    os << "UkInt3: " << post.getUkInt3() << std::endl;
+    Indent::printIndent(os);
+    os << "UkInt4: " << post.getUkInt4() << std::endl;
+    Indent::printIndent(os);
+    os << "UkInt5: " << post.getUkInt5() << std::endl;
+
+    if (post.getUkInts().size())
+    {
+        Indent::printIndent(os);
+        os << "UkInts:" << std::endl;
+        Indent::increaseIndent();
+        for (std::uint32_t uk_int : post.getUkInts())
+        {
+            Indent::printIndent(os);
+            os << uk_int << std::endl;
+        }
+        Indent::decreaseIndent();
+    }
+
+    Indent::decreaseIndent();
+    Indent::printIndent(os);
+    os << "}";
     return os;
 }
 
 std::ostream& operator<<(std::ostream& os, const HoeCollisionsMap& map)
 {
+    os << "HoeCollisionsMap {" << std::endl;
+    Indent::increaseIndent();
+
+    Indent::printIndent(os);
+    os << "Index: " << map.getIndex() << std::endl;
+
+    Indent::printIndent(os);
+    os << "Nb Cells: " << map.getCells().size() << std::endl;
+    Indent::printIndent(os);
+    os << "Cells: To see the cells, extract the maps with --hoe-extract-maps"
+        << std::endl;
+
+    Indent::printIndent(os);
+    os << "Width: " << map.getWidth() << std::endl;
+    Indent::printIndent(os);
+    os << "Height: " << map.getHeight() << std::endl;
+
+    Indent::printIndent(os);
+    os << "UkFloat1: " << map.getUkFloat1() << std::endl;
+    Indent::printIndent(os);
+    os << "UkFloat2: " << map.getUkFloat2() << std::endl;
+    Indent::printIndent(os);
+    os << "UkFloat3: " << map.getUkFloat3() << std::endl;
+    Indent::printIndent(os);
+    os << "UkFloat4: " << map.getUkFloat4() << std::endl;
+    Indent::printIndent(os);
+    os << "UkFloat5: " << map.getUkFloat5() << std::endl;
+    Indent::printIndent(os);
+    os << "UkFloat6: " << map.getUkFloat6() << std::endl;
+    Indent::printIndent(os);
+    os << "UkFloat7: " << map.getUkFloat7() << std::endl;
+    Indent::printIndent(os);
+    os << "UkFloat8: " << map.getUkFloat8() << std::endl;
+
+    Indent::printIndent(os);
+    os << "PostMaps:" << std::endl;
+    Indent::increaseIndent();
+    for (const HoeCollisionsPostMap& post_map : map.getPostMaps())
+    {
+        Indent::printIndent(os);
+        os << post_map << std::endl;
+    }
+    Indent::decreaseIndent();
+
+    Indent::decreaseIndent();
+    Indent::printIndent(os);
+    os << "}";
     return os;
 }
 
-std::ostream& operator<<(std::ostream& os,
-    const HoeCollisionsPostMap& post_map)
+std::ostream& operator<<(std::ostream& os, const HoeCollisions& collisions)
 {
+    os << "HoeCollisions {" << std::endl;
+    Indent::increaseIndent();
+
+    Indent::printIndent(os);
+    os << "UkInt1: " << collisions.getUkInt1() << std::endl;
+    Indent::printIndent(os);
+    os << "RoomId: " << collisions.getRoomId() << std::endl;
+    Indent::printIndent(os);
+    os << "UkInt2: " << collisions.getUkInt2() << std::endl;
+    Indent::printIndent(os);
+    os << "UkFloat1: " << collisions.getUkFloat1() << std::endl;
+    Indent::printIndent(os);
+    os << "UkFloat2: " << collisions.getUkFloat2() << std::endl;
+    Indent::printIndent(os);
+    os << "UkFloat3: " << collisions.getUkFloat3() << std::endl;
+
+    Indent::printIndent(os);
+    os << "Nb maps: " << collisions.getMaps().size() << std::endl;
+    Indent::printIndent(os);
+    os << "Maps:" << std::endl;
+    Indent::increaseIndent();
+    for (const HoeCollisionsMap& map : collisions.getMaps())
+    {
+        Indent::printIndent(os);
+        os << map << std::endl;
+    }
+    Indent::decreaseIndent();
+
+    Indent::printIndent(os);
+    os << "Width: " << collisions.getWidth() << std::endl;
+    Indent::printIndent(os);
+    os << "Height: " << collisions.getHeight() << std::endl;
+
+    Indent::printIndent(os);
+    os << "UkFloat4: " << collisions.getUkFloat4() << std::endl;
+    Indent::printIndent(os);
+    os << "UkFloat5: " << collisions.getUkFloat5() << std::endl;
+    Indent::printIndent(os);
+    os << "UkFloat6: " << collisions.getUkFloat6() << std::endl;
+    Indent::printIndent(os);
+    os << "UkFloat7: " << collisions.getUkFloat7() << std::endl;
+    Indent::printIndent(os);
+    os << "UkFloat8: " << collisions.getUkFloat8() << std::endl;
+    Indent::printIndent(os);
+    os << "UkFloat9: " << collisions.getUkFloat9() << std::endl;
+
+    Indent::printIndent(os);
+    os << "UkInt3: " << collisions.getUkInt3() << std::endl;
+    Indent::printIndent(os);
+    os << "UkInt4: " << collisions.getUkInt4() << std::endl;
+    Indent::printIndent(os);
+    os << "UkInt5: " << collisions.getUkInt5() << std::endl;
+    Indent::printIndent(os);
+    os << "UkInt6: " << collisions.getUkInt6() << std::endl;
+    Indent::printIndent(os);
+    os << "UkInt7: " << collisions.getUkInt7() << std::endl;
+    Indent::printIndent(os);
+    os << "UkInt8: " << collisions.getUkInt8() << std::endl;
+    Indent::printIndent(os);
+    os << "UkInt9: " << collisions.getUkInt9() << std::endl;
+
+    if (collisions.getPostCollisions().size())
+    {
+        Indent::printIndent(os);
+        os << "PostCollisions:" << std::endl;
+        Indent::increaseIndent();
+        for (const HoePostCollisions& post : collisions.getPostCollisions())
+        {
+            Indent::printIndent(os);
+            os << post << std::endl;
+        }
+        Indent::decreaseIndent();
+    }
+
+    Indent::decreaseIndent();
+    Indent::printIndent(os);
+    os << "}";
     return os;
 }
 
@@ -2605,6 +2828,209 @@ std::ostream& operator<<(std::ostream& os, const HoeEvent& event)
     return os;
 }
 
+std::ostream& operator<<(std::ostream& os, const HoeInstanceEvent& event)
+{
+    os << "HoeInstanceEvent {" << std::endl;
+    Indent::increaseIndent();
+
+    Indent::printIndent(os);
+    os << "UkInt1: " << event.getUkInt1() << std::endl;
+    Indent::printIndent(os);
+    os << "Name: " << event.getName() << std::endl;
+
+    if (event.getConstants().size())
+    {
+        Indent::printIndent(os);
+        os << "Constants:" << std::endl;
+        Indent::increaseIndent();
+        for (const HoeConstant& constant : event.getConstants())
+        {
+            Indent::printIndent(os);
+            os << constant << std::endl;
+        }
+        Indent::decreaseIndent();
+    }
+
+    Indent::decreaseIndent();
+    Indent::printIndent(os);
+    os << "}";
+    return os;
+}
+
+std::ostream& operator<<(std::ostream& os, const HoeInstanceGlobal& global)
+{
+    os << "HoeInstanceGlobal {" << std::endl;
+    Indent::increaseIndent();
+
+    Indent::printIndent(os);
+    os << "Name: " << global.getName() << std::endl;
+    Indent::printIndent(os);
+    os << "UkInt1: " << global.getUkInt1() << std::endl;
+    Indent::printIndent(os);
+    os << "UkInt2: " << global.getUkInt2() << std::endl;
+
+    Indent::decreaseIndent();
+    Indent::printIndent(os);
+    os << "}";
+    return os;
+}
+
+std::ostream& operator<<(std::ostream& os, const HoePostInstance& post_instance)
+{
+    os << "HoePostInstance {" << std::endl;
+    Indent::increaseIndent();
+
+    Indent::printIndent(os);
+    os << "UkInt1: " << post_instance.getUkInt1() << std::endl;
+    Indent::printIndent(os);
+    os << "UkInt2: " << post_instance.getUkInt2() << std::endl;
+
+    Indent::printIndent(os);
+    os << "UkFloat1: " << post_instance.getUkFloat1() << std::endl;
+    Indent::printIndent(os);
+    os << "UkFloat2: " << post_instance.getUkFloat2() << std::endl;
+    Indent::printIndent(os);
+    os << "UkFloat3: " << post_instance.getUkFloat3() << std::endl;
+    Indent::printIndent(os);
+    os << "UkFloat4: " << post_instance.getUkFloat4() << std::endl;
+
+    Indent::printIndent(os);
+    os << "UkInt3: " << post_instance.getUkInt3() << std::endl;
+
+    Indent::printIndent(os);
+    os << "UkFloat5: " << post_instance.getUkFloat5() << std::endl;
+
+    Indent::printIndent(os);
+    os << "UkInt4: " << post_instance.getUkInt4() << std::endl;
+    Indent::printIndent(os);
+    os << "UkInt5: " << post_instance.getUkInt5() << std::endl;
+
+    Indent::decreaseIndent();
+    Indent::printIndent(os);
+    os << "}";
+    return os;
+}
+
+std::ostream& operator<<(std::ostream& os, const HoeInstance& instance)
+{
+    os << "HoeInstance {" << std::endl;
+    Indent::increaseIndent();
+
+    Indent::printIndent(os);
+    os << "UkByte1: " << static_cast<std::uint32_t>(instance.getUkByte1())
+        << std::endl;
+    Indent::printIndent(os);
+    os << "UkInt1: 0x" << std::hex << instance.getUkInt1() << std::dec
+        << std::endl;
+    Indent::printIndent(os);
+    os << "Name: " << instance.getName() << std::endl;
+    Indent::printIndent(os);
+    os << "Event Type: " << instance.getEventType() << std::endl;
+    Indent::printIndent(os);
+    os << "Params: " << instance.getParams() << std::endl;
+    Indent::printIndent(os);
+    os << "UkInt2: " << instance.getUkInt2() << std::endl;
+    Indent::printIndent(os);
+    os << "UkInt3: " << instance.getUkInt3() << std::endl;
+
+    Indent::printIndent(os);
+    os << "LStrings:" << std::endl;
+    Indent::increaseIndent();
+    for (const std::string& lstring : instance.getLStrings())
+    {
+        Indent::printIndent(os);
+        os << lstring << std::endl;
+    }
+    Indent::decreaseIndent();
+
+    // TODO: finish this
+    Indent::printIndent(os);
+    os << "InstanceEvents:" << std::endl;
+    Indent::increaseIndent();
+    for (const HoeInstanceEvent& instance_event : instance.getEvents())
+    {
+        Indent::printIndent(os);
+        os << instance_event << std::endl;
+    }
+    Indent::decreaseIndent();
+
+    Indent::printIndent(os);
+    os << "UkInt4: " << instance.getUkInt4() << std::endl;
+
+    Indent::decreaseIndent();
+    Indent::printIndent(os);
+    os << "}";
+    return os;
+}
+
+std::ostream& operator<<(std::ostream& os, const HoePostImports& post_import)
+{
+    os << "PostImport {" << std::endl;
+    Indent::increaseIndent();
+
+    Indent::printIndent(os);
+    os << "UkInt1: " << post_import.getUkInt1() << std::endl;
+    Indent::printIndent(os);
+    os << "UkInt2: " << post_import.getUkInt2() << std::endl;
+    Indent::printIndent(os);
+    os << "UkInt3: " << post_import.getUkInt3() << std::endl;
+    Indent::printIndent(os);
+    os << post_import.getLString() << std::endl;
+    Indent::printIndent(os);
+    os << "UkInt4: " << post_import.getUkInt4() << std::endl;
+    Indent::printIndent(os);
+    os << "UkInt5: " << post_import.getUkInt5() << std::endl;
+    Indent::printIndent(os);
+    os << "UkInt6: " << post_import.getUkInt6() << std::endl;
+
+    Indent::decreaseIndent();
+    Indent::printIndent(os);
+    os << "}";
+    return os;
+}
+
+std::ostream& operator<<(std::ostream& os, const HoeImports& imports)
+{
+    os << "HoeImports {" << std::endl;
+    Indent::increaseIndent();
+
+    Indent::printIndent(os);
+    switch (imports.getImportsType())
+    {
+    case HoeImportsType::ONE:
+        os << "ImportsType: ONE" << std::endl;
+        break;
+    case HoeImportsType::TWO:
+        os << "ImportsType: TWO" << std::endl;
+        break;
+    }
+
+    Indent::printIndent(os);
+    os << "LStrings:" << std::endl;
+    Indent::increaseIndent();
+    for (const std::string& lstring : imports.getLStrings())
+    {
+        Indent::printIndent(os);
+        os << lstring << std::endl;
+    }
+    Indent::decreaseIndent();
+
+    Indent::printIndent(os);
+    os << "PostImports:" << std::endl;
+    Indent::increaseIndent();
+    for (const HoePostImports& post_import : imports.getPostImports())
+    {
+        Indent::printIndent(os);
+        os << post_import << std::endl;
+    }
+    Indent::decreaseIndent();
+
+    Indent::decreaseIndent();
+    Indent::printIndent(os);
+    os << "}";
+    return os;
+}
+
 std::ostream& operator<<(std::ostream& os, const HoeConstant& constant)
 {
     if (constant.getConstantType() == HoeConstantType::INT)
@@ -2632,6 +3058,24 @@ std::ostream& operator<<(std::ostream& os, const HoeChunk& chunk)
     if (collisions)
     {
         os << *collisions;
+        return os;
+    }
+
+    const HoeInstance* instance = dynamic_cast<const HoeInstance*>(
+        &chunk
+    );
+    if (instance)
+    {
+        os << *instance;
+        return os;
+    }
+
+    const HoeImports* imports = dynamic_cast<const HoeImports*>(
+        &chunk
+    );
+    if (imports)
+    {
+        os << *imports;
         return os;
     }
 

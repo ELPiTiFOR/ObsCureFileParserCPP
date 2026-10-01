@@ -49,6 +49,18 @@ namespace commands
         delete hoe_file;
     }
 
+    void parseHoe(fs::path hoe_path, fs::path output_path)
+    {
+        HoeFile* hoe_file = HoeFile::makeFile(hoe_path);
+        if (!hoe_file) return;
+
+        std::ofstream file(output_path);
+        file << *hoe_file;
+
+        file.close();
+        delete hoe_file;
+    }
+
     void test()
     {
     }
