@@ -181,6 +181,7 @@ public:
     float getUkFloat3() const;
     std::uint32_t getIsTherePostInstance() const;
     HoePostInstance& getPostInstance();
+    const HoePostInstance& getPostInstance() const;
 
     void setUkByte1(std::uint8_t uk_byte1);
     void setLength(std::uint32_t length);

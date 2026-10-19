@@ -482,6 +482,11 @@ HoePostInstance& HoeInstance::getPostInstance()
     return post_instance_;
 }
 
+const HoePostInstance& HoeInstance::getPostInstance() const
+{
+    return post_instance_;
+}
+
 void HoeInstance::setUkByte1(std::uint8_t uk_byte1)
 {
     uk_byte1_ = uk_byte1;
@@ -2956,6 +2961,55 @@ std::ostream& operator<<(std::ostream& os, const HoeInstance& instance)
 
     Indent::printIndent(os);
     os << "UkInt4: " << instance.getUkInt4() << std::endl;
+
+    Indent::printIndent(os);
+    os << "Globals:" << std::endl;
+    Indent::increaseIndent();
+    for (const HoeInstanceGlobal& global : instance.getGlobals())
+    {
+        Indent::printIndent(os);
+        os << global << std::endl;
+    }
+    Indent::decreaseIndent();
+
+    Indent::printIndent(os);
+    os << "X: " << instance.getX() << std::endl;
+    Indent::printIndent(os);
+    os << "Y: " << instance.getY() << std::endl;
+    Indent::printIndent(os);
+    os << "Z: " << instance.getZ() << std::endl;
+
+    Indent::printIndent(os);
+    os << "UkFloat1: " << instance.getUkFloat1() << std::endl;
+    Indent::printIndent(os);
+    os << "UkFloat2: " << instance.getUkFloat2() << std::endl;
+
+    Indent::printIndent(os);
+    os << "UkInt5: " << instance.getUkInt5() << std::endl;
+
+    Indent::printIndent(os);
+    os << "Health: " << instance.getHealth() << std::endl;
+    Indent::printIndent(os);
+    os << "Max health: " << instance.getMaxHealth() << std::endl;
+
+    Indent::printIndent(os);
+    os << "UkInt6: " << instance.getUkInt6() << std::endl;
+    Indent::printIndent(os);
+    os << "UkInt7: " << instance.getUkInt7() << std::endl;
+    Indent::printIndent(os);
+    os << "UkInt8: " << instance.getUkInt8() << std::endl;
+
+    Indent::printIndent(os);
+    os << "Radius: " << instance.getRadius() << std::endl;
+
+    Indent::printIndent(os);
+    os << "UkFloat3: " << instance.getUkFloat3() << std::endl;
+
+    if (instance.getIsTherePostInstance())
+    {
+        Indent::printIndent(os);
+        os << instance.getPostInstance() << std::endl;
+    }
 
     Indent::decreaseIndent();
     Indent::printIndent(os);
